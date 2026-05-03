@@ -791,7 +791,7 @@ function render(){
             const catKey=c.file.split('_')[0];
             const hasV=HAS_VIDEO.has(catKey);
             const mediaHtml=hasV?
-              '<div class="case-video'+(c.landscape?' land':'')+'" onclick="tv(this,event)"><video src="\u6848\u4F8B\u7D20\u6750/videos/'+c.file+'.mp4" poster="\u6848\u4F8B\u7D20\u6750/videos/'+c.file+'_thumb.jpg" preload="metadata" playsinline></video><div class="play-btn"><svg viewBox="0 0 64 64"><path d="M24 16l24 16-24 16z"/></svg></div></div>':
+              '<div class="case-video'+(c.landscape?' land':'')+'" onclick="tv(this,event)"><video src="videos/'+c.file+'.mp4" poster="videos/'+c.file+'_thumb.jpg" preload="metadata" playsinline></video><div class="play-btn"><svg viewBox="0 0 64 64"><path d="M24 16l24 16-24 16z"/></svg></div></div>':
               '<div class="case-video'+(c.landscape?' land':'')+'"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--s2);color:var(--t3);font-size:12px">\u89C6\u9891\u5F85\u8865\u5145</div></div>';
             const gl=c.grade==='s'?'S\u00b7\u4F18\u8D28':'A\u00b7\u9AD8\u6F5C';
             bd+='<div class="case-card">'+mediaHtml+'<div class="case-info"><div class="case-author"><div class="case-avatar"><img src="'+c.avatar+'" onerror="this.parentElement.innerHTML=\'<div style=padding:4px;text-align:center;font-size:11px>'+c.author[0]+'</div>\'"/></div><span class="case-name">'+c.author+'</span><span class="case-grade-tag '+c.grade+'">'+gl+'</span></div><div class="case-desc">'+c.desc+'</div><div class="case-stats">'+c.stats+'</div></div></div>';
@@ -882,7 +882,7 @@ const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")
 if(hash===PW_HASH){
 document.getElementById("pw-gate").classList.add("hidden");
 document.getElementById("main-content").classList.add("unlocked");
-sessionStorage.setItem("pw_ok","1");
+localStorage.setItem("pw_ok","1");
 setTimeout(()=>document.getElementById("pw-gate").remove(),600);
 }else{
 inp.classList.add("shake");
@@ -890,7 +890,7 @@ document.getElementById("pw-err").textContent="密码错误，请重试";
 setTimeout(()=>inp.classList.remove("shake"),400);
 }
 }
-if(sessionStorage.getItem("pw_ok")==="1"){
+if(localStorage.getItem("pw_ok")==="1"){
 document.getElementById("pw-gate").classList.add("hidden");
 document.getElementById("main-content").classList.add("unlocked");
 setTimeout(()=>document.getElementById("pw-gate").remove(),100);
