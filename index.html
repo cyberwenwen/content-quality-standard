@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>视频号内容审美分级标准 v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--bg2:#0f0f0f;--s1:#141414;--s2:#1a1a1a;--s3:#232323;--s4:#2e2e2e;
+  --t:#e8e6e1;--t2:#a09d96;--t3:#6b6863;--t4:#4a4744;
+  --ac:#c8a96e;--ac2:#b8963a;
+  --gs:#c8a96e;--ga:#7ba3c9;--gb:#8a8a7a;--gc:#8b5a5a;
+  --r:8px;--sidebar:220px;
+  --serif:'Noto Serif SC','DM Serif Display',Georgia,serif;
+  --sans:'Plus Jakarta Sans','Noto Sans SC',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);line-height:1.7;font-size:15px;overflow-x:hidden}
+::selection{background:var(--ac);color:var(--bg)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--s4);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--t4)}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);
+  background:var(--s1);border-right:1px solid var(--s3);
+  display:flex;flex-direction:column;z-index:200;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-header{
+  padding:28px 20px 20px;border-bottom:1px solid var(--s3);flex-shrink:0;
+}
+.sidebar-logo{
+  font-family:var(--serif);font-size:16px;font-weight:700;color:var(--t);
+  letter-spacing:0.5px;line-height:1.3;
+}
+.sidebar-logo span{color:var(--ac)}
+.sidebar-sub{font-size:11px;color:var(--t3);margin-top:6px;letter-spacing:0.5px}
+
+.sidebar-nav{
+  flex:1;overflow-y:auto;padding:12px 0;
+  scrollbar-width:thin;scrollbar-color:var(--s4) transparent;
+}
+.sidebar-nav::-webkit-scrollbar{width:3px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+
+.nav-group-label{
+  padding:16px 20px 6px;font-size:10px;font-weight:600;
+  color:var(--t4);letter-spacing:2px;text-transform:uppercase;
+  user-select:none;
+}
+.nav-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 20px 8px 16px;margin:1px 8px;border-radius:6px;
+  font-size:13px;color:var(--t3);cursor:pointer;
+  position:relative;transition:all .15s ease;user-select:none;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{color:var(--t2);background:rgba(255,255,255,.03)}
+.nav-item.active{
+  color:var(--ac);background:rgba(200,169,110,.06);
+  border-left-color:var(--ac);font-weight:500;
+}
+.nav-item .nav-icon{
+  width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;opacity:.7;
+}
+.nav-item.active .nav-icon{opacity:1}
+.nav-item.gen-item{font-weight:600}
+.nav-item.gen-item .nav-icon{color:var(--ac)}
+
+.sidebar-footer{
+  padding:16px 20px;border-top:1px solid var(--s3);flex-shrink:0;
+  font-size:10px;color:var(--t4);letter-spacing:0.5px;
+}
+
+/* ===== MOBILE HAMBURGER ===== */
+.hamburger{
+  display:none;position:fixed;top:14px;left:14px;z-index:300;
+  width:40px;height:40px;border-radius:8px;border:1px solid var(--s3);
+  background:rgba(20,20,20,.9);backdrop-filter:blur(12px);
+  cursor:pointer;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.hamburger:hover{background:var(--s2)}
+.hamburger span{
+  display:block;width:18px;height:2px;background:var(--t2);
+  border-radius:1px;position:relative;transition:all .3s;
+}
+.hamburger span::before,.hamburger span::after{
+  content:'';position:absolute;left:0;width:100%;height:2px;
+  background:var(--t2);border-radius:1px;transition:all .3s;
+}
+.hamburger span::before{top:-6px}
+.hamburger span::after{top:6px}
+.hamburger.open span{background:transparent}
+.hamburger.open span::before{top:0;transform:rotate(45deg)}
+.hamburger.open span::after{top:0;transform:rotate(-45deg)}
+
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:190;opacity:0;transition:opacity .3s;
+}
+.sidebar-overlay.show{display:block;opacity:1}
+
+/* ===== MAIN CONTENT ===== */
+.main-wrap{
+  margin-left:var(--sidebar);min-height:100vh;
+  background:var(--bg);
+}
+.content-area{
+  max-width:780px;margin:0 auto;padding:48px 40px 120px;
+}
+
+/* ===== SECTION HEADER ===== */
+.sec{display:none;animation:fadeUp .4s ease}.sec.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-header{
+  margin-bottom:40px;padding-bottom:24px;
+  border-bottom:1px solid rgba(200,169,110,.1);
+}
+.sec-overtitle{
+  font-size:10px;font-weight:600;color:var(--ac);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;
+}
+.sec-title{
+  font-family:var(--serif);font-size:28px;font-weight:700;
+  line-height:1.3;margin-bottom:10px;
+}
+.sec-logic{
+  display:inline-flex;align-items:center;gap:0;
+  padding:6px 14px;background:var(--s2);border:1px solid var(--s3);
+  border-radius:20px;font-size:12px;color:var(--t2);margin-top:4px;
+}
+.sec-logic em{font-style:normal;color:var(--ac);margin:0 2px}
+
+/* ===== GRADE PANEL ===== */
+.grade-panel{
+  margin-bottom:20px;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--s3);background:var(--s1);
+  transition:border-color .2s;
+}
+.grade-panel:hover{border-color:var(--s4)}
+
+/* Grade-specific left border */
+.grade-panel.g-s{border-left:3px solid var(--gs)}
+.grade-panel.g-a{border-left:3px solid var(--ga)}
+.grade-panel.g-b{border-left:3px solid var(--gb)}
+.grade-panel.g-c{border-left:3px solid var(--gc)}
+
+/* S-grade special background */
+.grade-panel.g-s{background:linear-gradient(135deg,rgba(200,169,110,.04) 0%,var(--s1) 60%)}
+.grade-panel.g-s .grade-head{background:linear-gradient(90deg,rgba(200,169,110,.08) 0%,transparent 70%)}
+
+.grade-head{
+  padding:14px 20px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:background .15s;
+}
+.grade-head:hover{background:rgba(255,255,255,.02)}
+
+.grade-badge{
+  padding:3px 12px;border-radius:4px;font-size:11px;
+  font-weight:700;letter-spacing:1.5px;color:var(--bg);
+  font-family:var(--sans);
+}
+.grade-badge.gs{background:var(--gs)}
+.grade-badge.ga{background:var(--ga)}
+.grade-badge.gb{background:var(--gb)}
+.grade-badge.gc{background:var(--gc)}
+
+.grade-label{font-size:15px;font-weight:600;letter-spacing:0.3px}
+.grade-arrow{
+  margin-left:auto;font-size:14px;color:var(--t3);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.grade-panel.open .grade-arrow{transform:rotate(180deg)}
+
+.grade-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.grade-panel.open .grade-body{max-height:12000px}
+.grade-inner{padding:4px 24px 24px}
+
+/* ===== RULE GROUPS ===== */
+.rule-group{margin-bottom:16px}
+.rule-group h4{
+  font-size:12px;font-weight:600;color:var(--ac);
+  letter-spacing:0.5px;margin-bottom:10px;
+  padding-bottom:4px;
+}
+.rule-list{list-style:none}
+.rule-list li{
+  padding:6px 0 6px 28px;position:relative;
+  font-size:14px;color:var(--t2);line-height:1.75;
+}
+.rule-list li::before{
+  content:attr(data-num);position:absolute;left:0;top:6px;
+  width:20px;height:20px;border-radius:4px;
+  background:var(--s3);color:var(--t3);
+  font-size:10px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1;
+}
+.rule-list li strong{color:var(--t);font-weight:600}
+
+/* ===== CASE SECTION ===== */
+.case-divider{
+  margin-top:24px;padding-top:16px;border-top:1px solid var(--s3);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;
+}
+.case-divider-icon{
+  width:20px;height:20px;border-radius:4px;
+  background:var(--s3);display:flex;align-items:center;justify-content:center;
+  font-size:11px;
+}
+.case-divider-text{
+  font-size:11px;font-weight:600;color:var(--t3);letter-spacing:1.5px;
+}
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.case-card{
+  background:var(--s2);border:1px solid var(--s3);
+  border-radius:var(--r);overflow:hidden;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+}
+.case-card:hover{
+  border-color:rgba(200,169,110,.15);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+
+.case-video{
+  position:relative;aspect-ratio:9/16;max-height:360px;
+  background:#000;overflow:hidden;cursor:pointer;
+}
+.case-video.land{aspect-ratio:16/9;max-height:240px}
+.case-video video,.case-video img.poster{width:100%;height:100%;object-fit:cover}
+.case-video .play-btn{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;background:rgba(0,0,0,.25);transition:opacity .2s;
+}
+.case-video .play-btn svg{width:40px;height:40px;fill:rgba(255,255,255,.85)}
+.case-video.playing .play-btn{opacity:0}
+
+.case-info{padding:14px 16px}
+.case-author{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.case-avatar{
+  width:24px;height:24px;border-radius:50%;overflow:hidden;
+  background:var(--s3);flex-shrink:0;
+}
+.case-avatar img{width:100%;height:100%;object-fit:cover}
+.case-name{font-size:12px;font-weight:500}
+.case-grade-tag{
+  margin-left:auto;font-size:10px;padding:2px 8px;
+  border-radius:3px;font-weight:700;letter-spacing:.5px;
+}
+.case-grade-tag.s{background:rgba(200,169,110,.1);color:var(--gs);border:1px solid rgba(200,169,110,.25)}
+.case-grade-tag.a{background:rgba(123,163,201,.1);color:var(--ga);border:1px solid rgba(123,163,201,.25)}
+.case-desc{
+  font-size:12px;color:var(--t2);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;margin-bottom:8px;
+}
+.case-stats{font-size:11px;color:var(--t3)}
+
+/* ===== GRADE LEGEND (in content header for general) ===== */
+.grade-legend{
+  display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;
+}
+.grade-legend span{
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);
+}
+.grade-legend i{
+  width:8px;height:8px;border-radius:50%;display:inline-block;
+}
+.grade-legend .dot-s{background:var(--gs)}
+.grade-legend .dot-a{background:var(--ga)}
+.grade-legend .dot-b{background:var(--gb)}
+.grade-legend .dot-c{background:var(--gc)}
+
+/* ===== SCROLL FADE-IN ===== */
+.fade-in-view{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.fade-in-view.visible{opacity:1;transform:translateY(0)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hamburger{display:flex}
+  .main-wrap{margin-left:0}
+  .content-area{padding:60px 20px 100px}
+  .case-grid{grid-template-columns:1fr}
+}
+@media(min-width:901px){
+  .hamburger{display:none!important}
+  .sidebar-overlay{display:none!important}
+}
+@media(max-width:500px){
+  .sec-title{font-size:22px}
+  .content-area{padding:56px 16px 80px}
+  .grade-inner{padding:4px 16px 20px}
+}
+</style>
+
+<style>
+#pw-gate{position:fixed;inset:0;z-index:10000;background:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .5s}
+#pw-gate.hidden{opacity:0;pointer-events:none}
+#pw-gate h2{font-family:'Noto Serif SC',serif;font-size:24px;color:#e8e6e1;font-weight:700;letter-spacing:1px}
+#pw-gate p{font-size:13px;color:#6b6863;max-width:320px;text-align:center;line-height:1.6}
+#pw-gate .pw-box{display:flex;gap:8px;align-items:center}
+#pw-gate input{background:#1c1c1c;border:1px solid #333;border-radius:6px;padding:10px 16px;font-size:15px;color:#e8e6e1;outline:none;width:220px;font-family:inherit;letter-spacing:1px}
+#pw-gate input:focus{border-color:#c8a96e}
+#pw-gate input.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+#pw-gate button{background:#c8a96e;color:#0a0a0a;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+#pw-gate button:hover{background:#d4b97a}
+#pw-gate .pw-hint{font-size:11px;color:#4a4a4a;margin-top:-8px}
+#pw-gate .pw-err{font-size:12px;color:#c45c5c;height:18px}
+#main-content{display:none}
+#main-content.unlocked{display:block}
+</style>
+</head>
+<body>
+<div id="pw-gate">
+<h2>🔒 内容审美分级标准</h2>
+<p>此文档仅限内部团队查阅<br>请输入访问密码</p>
+<div class="pw-box">
+<input type="password" id="pw-input" placeholder="输入密码" onkeydown="if(event.key==='Enter')checkPw()">
+<button onclick="checkPw()">进入</button>
+</div>
+<div class="pw-err" id="pw-err"></div>
+</div>
+<div id="main-content">
+
+
+<!-- Hamburger (mobile) -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+  <span></span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">视频号<span>审美分级</span></div>
+    <div class="sidebar-sub">S / A / B / C 四档标准</div>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">v2.0 &middot; 2026.05</div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-wrap">
+  <div class="content-area" id="mn"></div>
+</div>
+
+<script>
+const FEED={"An6XgxSsX": {"id": "An6XgxSsX", "nickname": "小麦肤色张力天", "desc": "交作业啦！这首歌太上头了#朝鲜族\n原创编舞@朝强舞蹈.", "like": "2131", "forward": "959", "fav": "4430", "comment": "270", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/FhVyutWBicLicJwFReTUHedYjoTKISlnRChaWXsAnicYQr6q1K6BwynljnBjUm2AeH70Uwx4lz3JkK9vrhFvlvN3o2icDibj7AExgS2Jz7iabJLIM/0"}, "AWjVdCDCb": {"id": "AWjVdCDCb", "nickname": "是阿珂", "desc": "只活一次的人生，要比谁都炙热", "like": "8.5万", "forward": "2.7万", "fav": "2.0万", "comment": "1979", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/ibJxLYyWNToDAKEW5f7jXSDwaRKV2LjZNambHhvQwaicaD821obibkNJv4XsKjV9rWj4gQkW2TcwVVb9jrVT8ZknZKSewWvnO71Zc9hufNviaHebs0TZ7wEWgExpkMOyfmMCQ2rYK8Jl22yu7oibrUOzuOg/0"}, "AieogDHpT": {"id": "AieogDHpT", "nickname": "zyx-小雨", "desc": "脚好像不听使唤了#13后#田柾国#chilllit 编舞#舞蹈 #校园#校园生活#操场上永远不缺舞者", "like": "5733", "forward": "490", "fav": "6208", "comment": "65", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/QuM7Tjb7QjTC693zzcWSLs9P5TPiaBLTIvT99CJZzHRbJF13ibwq2KCjCx4ibBQssmr19otZNuuZLyib42iciabrysiaS3LfRXTG1zazf9GSBxZgrAFgLJyZryYCQwck3zLua9X/0"}, "AsYS62KLM": {"id": "AsYS62KLM", "nickname": "BarbieQ0915", "desc": "把我尘封5年的足尖鞋翻出来了", "like": "1.8万", "forward": "1322", "fav": "2.6万", "comment": "195", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/tjqLjHQZqN4DtIPkjIlMfs88Z6JKldsb8hAbj4h5bqT9riarMYGWoBrLeB1ngBsCnHTKk1uicC3UEsuNJ6xzbxn08mxicKoic4lBdwsy0T7Qfpao5IUSiaSHr963I2YTvKQDk/0"}, "AJ7z2HvTv": {"id": "AJ7z2HvTv", "nickname": "JELLY的视觉", "desc": "在贵州藏着很多免费且小众的洞穴（附攻略）\n来贵州这么多年，发现了贵州的隐藏打卡攻略，当我们厌倦了人山人海的旅行目的地，不如来一场放松心灵的旅途。今天给大家分享几个贵州免费人少的户外放松地。\n第一个，安顺牛倒岩，贵阳出发一个小时左右。轻徒步，出片率高\n第二个：天星谷，限时版沙丘拍摄地。在上游没水之后可以前往。出发前建议提前看实时攻略。贵阳出发一个半小时左右。\n第三个：翁金洞，冬天最适合前往，可以看到阳光洒到洞口的感觉，很出片，贵阳出发一个半小时左右。\n第四个：麝香洞，位于织金县。从贵阳出发开车有点远，且最后的路途是典型的贵州山路。\n第五个：燕子洞，位于惠水县。贵阳开车过去两个小时，建议晴天前往，大概四点多可以看到光束打到燕子洞里边，如果不是看里边钟乳石没必要徒步到最里边。\n贵州真的有很多超好看的地方，很适合轻徒步。平时在城市就足够吵闹了，所以找个周末的时候来这些地方打卡，真的会让人立马放下疲惫的心。\n#贵州旅游#贵州冬季#旅行目的地#小众旅行#贵阳周边#贵阳拍照#贵阳周末#放松#徒步\n", "like": "7846", "forward": "1.3万", "fav": "1.1万", "comment": "250", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/cMDOmNPBqdZ26uZFZlwR99KpIyrytYOW8QD7LAej9RNa3ItS2lhwMsUMS3svicPKnJOZNrwo0gOga36mMlQyRic9Jj0MSBV7yicdKAhGiaBoqfA/0"}, "A0hjro6aU": {"id": "A0hjro6aU", "nickname": "一只红烧鲤鱼头", "desc": "我有勇气 我都不怕\n#旅行#转场", "like": "4.2万", "forward": "9771", "fav": "6.1万", "comment": "340", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/el5XQnDkYdkV9O4ngDhBghWPHCFwJkh2HaOkTBmYlqibD0mib7TUXZ8DclIB8NWT9c81UdVEUOVjjic6hLw6RiaaKFjibo34KNe0fyxpaVIzaBTc/0"}, "AuUxXAh8z": {"id": "AuUxXAh8z", "nickname": "旅行周周", "desc": "看似瑞士🇨🇭实则四川", "like": "3101", "forward": "7220", "fav": "6012", "comment": "517", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/jynY2XRKo8qp0qRmbOkqrdpsQE86hxpeKBFSRKAibl53vB4OksQUIB2fOBNutkUaV4sEaYWFXa784zhq4vIKg4NRHnS2cwSPt2wz8KQHVa6A/0"}, "A8LXlgkHe": {"id": "A8LXlgkHe", "nickname": "大掌柜不吃香菜", "desc": "M记 哦麦卡塞 我喜欢吃#麦当劳 #omakase", "like": "1.2万", "forward": "1.7万", "fav": "1.3万", "comment": "59", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/bMBhzLTKkDAibYuFyNv714G1RibiaFmyhCFtO9tpPOYfoEfRJiaoabibABicfFytZUXYiaq6C6ibAty8cQM6BLoc9kWfXyTbibcPFcneDvJmc5Wb3dzA/0"}, "AuWYQckaQ": {"id": "AuWYQckaQ", "nickname": "波比来了-", "desc": "空气感十足的抹茶圆顶蛋糕\n「（Gourmand Vital）垂井本店」\n来自岐阜县不破郡垂井町甜品店\n4月限定发售的抹茶款\n抹茶风味醇厚，入口在口中轻柔融化\n甜而不腻，抹茶的微苦与奶酪的绵密完美融合\n#治愈系美食 #甜品治愈一切 #日本美食 #芝士蛋糕", "like": "8955", "forward": "9495", "fav": "1.4万", "comment": "168", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/xo6q7cToeZzsLB2MK8V572zM0Oy83q0bibKAygq5P6STzjWImKibarDm85CGIx0ID6qnssKU45n1E1VFWUptWibS7TVFzwxiaicaXFUFcjasx6sibW6P3Iricd7icFNUWgrBNq0O/0"}, "Af3J0bnOr": {"id": "Af3J0bnOr", "nickname": "阿飞呐-减脂版", "desc": "糊弄减脂餐😋豆花牛肉#减脂餐#减脂食谱#吃瘦不饿瘦#好吃不胖健康餐#低卡低脂餐", "like": "914", "forward": "4404", "fav": "3123", "comment": "42", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/tiaad6ZAOtuB16N3Ps7uNelLH6ibdjU1OpwD5PGpzU4KfiaLCpxldS98ibAG7yxPXZfZfAjkTMLFtoIHuXFC7bInwe9jJphNTfNlqQDayJsgvuV9Mpj80U4J66vV3Rbhmrrr/0"}, "AYgdVX44l": {"id": "AYgdVX44l", "nickname": "厚皮橙本人", "desc": "", "like": "692", "forward": "2802", "fav": "2758", "comment": "524", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/BwOT9BwYfUo2xianSEBBy3hc7tjJviaiaoN41iaFKIHrUJXrAUmduR9CE8QxIm4FS3e8lviabicAbUlSibdicqFybcgbeUq4NtcJ1WnEs8dqPZN8Is9qYF9qG68ib6ByRlZUs4Xvb/0"}, "AmgXi9wi8": {"id": "AmgXi9wi8", "nickname": "花花和肉肉标本工作室", "desc": "制作黄蓝金刚鹦鹉标本\n林业委托合法制作\n一只金刚的新开始\n有些生命永不消逝\n#标本制作#手作#动物标本#黄蓝金刚#vlog#治愈#解压", "like": "2123", "forward": "1950", "fav": "4874", "comment": "313", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/CzVMfFbJIEPNapOpQ2H09hSPVZqyq3ufAWj7UymrmP2eWkzAdkPFqhHFibdXteBsmuVN4sT9jd6DiabUyAFA8eL4l9BLzPQoohW5zUyYVIAF3QYyZqRROFDibGfJLjLl9pJ/0"}, "AlrHh9eCx": {"id": "AlrHh9eCx", "nickname": "heytea嗨嗨", "desc": "跟着菜场学潮汕人怎么过日子\n\n六点半的早晨\n一条老街承包了所有的早餐\n\n豆浆搭配着油条甜咸都有的\n豆花有甜的也有咸的加香菜\n街角的阿嫲在用手打牛肉丸\n阿公的甘草水果每天都排着队\n我好像读懂了烟火气\n\n看菜场就能知道当地吃什么\n各色粿品才是潮汕人最爱\n\n慢下来的生活原来才是真正的生活\n#潮汕人怎么过日子", "like": "1.5万", "forward": "1.5万", "fav": "1.1万", "comment": "304", "headImg": "https://wx.qlogo.cn/mmhead/ver_1/Ec6JLOgibjXljFaLY3UAX7mdbwGkz1Uz4eO2pnRyibe21iayYOmfWn9J0jKOdb8yP9GzGBCNBxgR6mARnGHx7iaokJj0iavcBWBib74YCWics7t9Z8ZtpnoHOWgQjXKKevtnZkgM6wuteicC3XFDDD76AEsD0A/132"}, "AmarTel4F": {"id": "AmarTel4F", "nickname": "养花的人", "desc": "35岁INFP独居男生\n好看又好养的绿植分享\n#独居生活 #绿植分享 #Infp", "like": "305", "forward": "510", "fav": "1113", "comment": "46", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/C5ViaHa7IbTmQhHy6qwzepbzDwoXVyRSd3sPXfGBxoLVicSFMEWlHepas0ZeltATuedHIKya93aPZv8n715If1XibaNINhuLpn7hket3GmeG0PxqB4yChkib1Vo7icydes6I9xicvLekIxtHrVfZeRWI6C0g/0"}, "AE5MCtbXs": {"id": "AE5MCtbXs", "nickname": "张教授日记", "desc": "六旬教授备课备着备着忘记自己在录像了", "like": "4509", "forward": "6155", "fav": "1.9万", "comment": "673", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/QYAdJ4Quuol8icafYbPzGGQjfmbhvyJnC4jUFzia3Tr8d82MDg84xyIuRpiaywrewLWcIFndmCQbl6ITEY010YNDns3bmEpcbEUnXmVLphlQsc/0"}, "AncCVgzBe": {"id": "AncCVgzBe", "nickname": "周周的旅行", "desc": "独自旅行的女孩10年走62个国家和地区\n\n10年走62个国家和地区\n我从青春里出发\n一路向着未知走\n走过荒野与山川\n\n那些年我背着背包\n翻过雪山\n穿过沙漠骑过骆驼追过极光\n\n2013那年\n我还是个小学生\n第一次独自踏上旅途\n\n2015那年\n我背着画板走进欧洲\n在维也纳的地铁站画过素描\n在塞尔维亚的古堡前画过夕阳\n\n2017年那年\n我第一次去了非洲\n616天从北非走到东非\n\n2023年的冬天来了\n我走进了北极圈\n在零下四十度的雪地里\n追到了极光\n一路上遇到了很多人\n有些人陪了我一段路\n\n也有人留在了原地\n但我还在走\n带着所有的相遇和告别\n继续往前走\n\n旅行教会我的\n不是走多远的路\n而是让我学会了和自己相处\n学会了勇敢\n你好\n我是周周和你分享我的旅行故事 ☺", "like": "5.1万", "forward": "4.9万", "fav": "4.8万", "comment": "1135", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/coIZvEKYibaQAMULXVspbE4FAB2DB5xWkGgvAcJ7QlucgXDGic78MaxEroBgGDNQADnqSJ4GPxiaia8KaTbxwus57LgjAaMFLt41wC2OsvFXtA4/0"}, "A5FkKZFXA": {"id": "A5FkKZFXA", "nickname": "小陈环游-探秘", "desc": "带你看花8万买的尼泊尔直升机上看到了什么景色.#珠穆朗玛峰#尼泊尔#尼泊尔直升飞机 #直升机看珠穆朗玛", "like": "1.2万", "forward": "3507", "fav": "7899", "comment": "213", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/UMSIaCwTnwakaib2JJLQYyIpsqTljNQicXVX9X8Kic4j1ZXuTdn9lDqnTMIorqQDUOn1lEciaRT2PiavSm8dMLXJOLaGdfApzgaamYu9FSHTlupt2fVZFnkPwM9P0EoSoDGZRbjbC3VibnTXfXT6PEST0NLg/0"}, "ACdhV32tb": {"id": "ACdhV32tb", "nickname": "雪球日记", "desc": "全网最有定位的小猫咪", "like": "1.5万", "forward": "6779", "fav": "3.1万", "comment": "331", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/Ngic8FxBGD33IibmxzRI4y8O4ChicpZbzQN5jGJa6d3MFNVUSBWwo1Bey0OW89CmbZ8cOoCtUztcBVepqQeu86hk4Bia3mLhj798lxRduDpib6Nc/0"}, "A59pHUJtk": {"id": "A59pHUJtk", "nickname": "终南山喵", "desc": "怎么区分小猫～#养猫和蜜蜂的小农女#隐居 #终南山喵山居日常 #小猫治愈世界 #小院时光 #猫咪 #萌宠", "like": "7661", "forward": "2800", "fav": "1.2万", "comment": "350", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/2epBPn3JmnricHmAaM6ib9iaf3wqM5yzDpd5afl1zjzibLyCk6p4GS3Jje3s3Vo5pnd4d2Hlrw3VAiafQ2SCXDdCRPHOP0GxJZOK79Is0HmJrRqg/0"}, "AKNRwO9QU": {"id": "AKNRwO9QU", "nickname": "旺旺成长记272", "desc": "不要坐我脚#狗狗 #中华田园犬 #小奶狗 #萌宠", "like": "2111", "forward": "789", "fav": "4172", "comment": "296", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/menuj8UzscPFEUtu5UC6E1icFXULCSnknXJXaER9aiaLFxXenJh6ozev0bDQK6D34nLdV0SjUU117KcxU8jQKcAH9zS9yLlxR0nfh2NQk3U2kGfPXnRe66e9TIfML0cliaL/0"}, "AjNFfPVwz": {"id": "AjNFfPVwz", "nickname": "小猪唛呀", "desc": "孩子的成功离不开父母的托举#小猪唛", "like": "5313", "forward": "4114", "fav": "1.0万", "comment": "218", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/0QNuutBfKnPqmJOa7pjFLCRw296Xm8fRC6mVaZwNW91pUiaMjPHWOWFZX4hBBwWL30tibg942V7icicia07pcmyYflhUWUbSPaiaG1CgD21u1NVq2cZoibwIngibKYqTU2cWHWpheQTgiaLfZNLl8MG8gPmADcA/0"}, "A4CKP9Q96": {"id": "A4CKP9Q96", "nickname": "DYwhere", "desc": "🛶我得了杭州病，大夫说喝两斤西湖水就好了", "like": "9687", "forward": "2616", "fav": "1.2万", "comment": "140", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/2Hgvu1sTpmCJtVjzB0nAQQIv46nHcB44ra0bH5icn6QqwHCMZJDFjLEMA096SPOb0aAMrA4rU1LQQtujJwrYI56CwficYFRb1pGFDsGcoughI/0"}, "AWCdg2oUQ": {"id": "AWCdg2oUQ", "nickname": "田野笔记的视频号", "desc": "我镜头里的人民 #摄影 #扫街 #人文 #街拍 #人间烟火", "like": "1498", "forward": "1706", "fav": "2885", "comment": "538", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/Cxcg30AktwFicjr0J4UN0PwfabP3HkQiaTHibaekOlPCyRV6CxNMrSRYg7bEvribtH5z5KabnxyyQCHtc9rqicOZicZKicC30tb4yDk26hbqYwtvzj0ibrrSazZGXAl1OTEJexeBNGrKutibKZuKKKGnMzyxqDw/0"}, "ACSEDl8sO": {"id": "ACSEDl8sO", "nickname": "水下摄影师鹿西Lusea", "desc": "热心的Chris在水里认出我后让我下下下，我下完了说：“来给我相机，你也下我拍你！”  你的主动换来一条人生大片！Chris开心的，五点就开始喝起了小酒哈哈哈哈哈 来找他导素材的时候已经快喝大了  今天所有人都开心极了！lucky day的一天 . 🧜‍♂️ Chris 📸 @水下摄影师鹿西Lusea  . #杰克风暴 #鲸鲨 #鲸鲨杰克同框 #balicasag #巴里卡萨 #自由潜水 #水下摄影 #鹿西Lusea #水下摄影师Luse #菲律宾 #薄荷岛", "like": "1879", "forward": "1052", "fav": "3032", "comment": "73", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/5AeOpCcMGp4XH5pWeZwpNpWvutKtuujmlbNxKm26jHYMvGfE4Y9DneGMEVFymLrt5ZeVNB7KeoTB6EaTxEYEibduibwKHQn6Gk9qUbcJaBV58/0"}, "AYTDSbMPb": {"id": "AYTDSbMPb", "nickname": "哈苏Hasselblad", "desc": "黑天鹅不知道自己在发光，但一亿像素知道  碧绿的湖面上黑天鹅缓缓游弋， 一亿像素放大， 看见羽毛的幽光如丝绸般流转。 哈苏自然色彩还原这份墨色与翠色的对话， 让优雅在细节里静静流淌。  摄影师：蘑菇子KINOKO 拍摄器材： 哈苏 907X & CFV 100C - 一脉三承，摄影由心 哈苏 XCD 2,5/90V - 柔美虚化高速镜头 #哈苏#摄影#相机#旅行#绿色#黑天鹅#春天#一亿像素 ", "like": "4052", "forward": "1426", "fav": "5666", "comment": "161", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/wwFeWfo2KElBDOq33Pal9H3kyDXGeGTYKmbs9ia2ZAfVIL9MgSELc0icM8s8A1zkC0NWDfRlterkspOVm3iaJqfS0cAFPeLMCJHBiafE1icYAOGM/0"}, "AhjR8wdPu": {"id": "AhjR8wdPu", "nickname": "厚哥痒弟", "desc": "哥哥明天考试，闲人勿扰～#萌娃 #皮太厚和皮痒痒 #小痒 #厚哥 #搞笑", "like": "4.3万", "forward": "2.5万", "fav": "9.1万", "comment": "1047", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/WvybAomUaZH4hicBRbwpWkJa5rRnzA2eLvIvJ8eZaaWfhtdo0W97Va3z6YO0xJZwiblT3m5JPU1a1Ojib9iaDMRYviaOHsxEh7rcU77ePesdTwcoMCWcPVfMln3cqXribdvK6t/0"}, "AriRn3UKz": {"id": "AriRn3UKz", "nickname": "小橙子一豆子姐姐", "desc": "你知道的，妈从小就没吃过好东西#记录孩子的点点滴滴", "like": "1.7万", "forward": "3327", "fav": "2.0万", "comment": "246", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/FtXPBLx1OPUcRia6xeKaLuibXOKXjsBicB7DWn93CJdrV0MszdaIaJAGk5mD7hV9IZJScdI0fY1AiadNt5lCnuy9fibQJISR5ibK56YHydOPTI5VGEwhr7QZEXmo4QRdD4lJub/0"}, "ARSjiV7Ch": {"id": "ARSjiV7Ch", "nickname": "沐言开心酱", "desc": "这演技不行啊", "like": "8.1万", "forward": "6358", "fav": "7.5万", "comment": "534", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/aN59JxpvhjcibB67XGhicY6SZ3SlBv8Updicof2e4YvAdlcsG4UpMPLPKs1pibkqW4FyBQiaM2cXTSdCONzticMxYXo2Sibx2ZlJGbDWDJUBvmcaVWiafsWUhvdiaNQFIBED7M4O0/0"}, "AxzwWpgDA": {"id": "AxzwWpgDA", "nickname": "樱桃小玲子Millie", "desc": "爱这些平凡又温暖的时刻！", "like": "848", "forward": "116", "fav": "3399", "comment": "65", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/GdzLmwznrlqIWGiaZP1buVlTp2MT3zGF0QElykhqeu1DyhHWDtGfTIGy1K5WicqLCtc26dfvkyCZRPZDv5Cu58P7iaj9hlHnR1WBRuJlNR2lfGDysxA8WOTelS4QPuH7BhO/0"}, "A5sS33biU": {"id": "A5sS33biU", "nickname": "沅芷教太极", "desc": "气沉丹田，劲贯四梢#太极拳教学 #太极拳 #武术 #强身健体 #弘扬中华传统文化 #养生", "like": "2.3万", "forward": "1.1万", "fav": "3.3万", "comment": "1798", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/8nDLFHEkrlRYhBAEDUdvkLCzT3icamiczHj0udicqictAZNTibX4B0ytibThSicNVnVZNybAcJ3BmdB0icwoRujpRY1J1gRKHoVFzJclFCFmHAsgSbotGjia1QICBcVJuwlJOddlp/0"}, "AsPIGdP6T": {"id": "AsPIGdP6T", "nickname": "伟大源于始终如一", "desc": "原版原声\n#冲浪 #冲浪女孩", "like": "160", "forward": "267", "fav": "252", "comment": "16", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/M6oJprTlWYsTH3CqZseoWQicibtNkdDmJsxOWflmRQq2opCbYR88ReW2apPZBY02v82iarxO8yARcPq8xcm9bP5ZEWeicnicFguE7xLLOA97uhZ4/0"}, "AGWvzZ2PU": {"id": "AGWvzZ2PU", "nickname": "朱古力bbb", "desc": "小肚子都没了😅", "like": "924", "forward": "3094", "fav": "1464", "comment": "176", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/dHvC89hzXLeRWw2IMed1EbQicRjZic4N2ubyicRCIwc91VDaRTanG8cicKHm7PWywL7vxFp6UlmRsnrj9mHmWHicibwIQhFMpg5a4kbib9qvkibZM5QtcoDw3gmfHqdrOOto71pS/0"}, "AmPCElAxz": {"id": "AmPCElAxz", "nickname": "TonyF部落", "desc": "WU24 2025\n中国混合组八强之路\n剩下的两天让我们不留遗憾\n\n#极限飞盘 #ULTICENT #ULTImages #tony飞盘瞬间 #中国队 #U24\n\n", "like": "2320", "forward": "1606", "fav": "2158", "comment": "122", "headImg": "https://mmhead.hk.wechat.com/mmhead/ver_1/JS66eyS5ZTumq2P7LWNmR0ricMSFbkA852dcibPQ4TahTicGNmXyTHibWLdPicTyhwf80zicsQSpXEicdYvEw57EFa3hkOdN6reAWSzFtFUpTqQu3dWa6puU37oOWGy9bVSwVonU6VK4CCqf7Pib194lQFaPlA/0"}, "AhkGFbxr6": {"id": "AhkGFbxr6", "nickname": "多邻国 Duolingo", "desc": "纸巾我只用进口的\n#404newera #kiiikiii #多邻国 #纸巾盒 #抽象\n", "like": "5752", "forward": "1219", "fav": "5501", "comment": "32", "headImg": "https://wx.qlogo.cn/mmhead/ver_1/Zqs0lPL8Bk6q0K7agSiadRwop3mJcTQZ9oegINUduO6cJ5enZzHQBMj3phicD7bKoTL9ZGhkVcAZhQu67a5JsWlGVLBncFgOia1JwAHHPcgicE27HX6WNWE99w5PmdeIvpC1twF3tmtZXAprXqsMnhgwXw/132"}, "AiLURBqCr": {"id": "AiLURBqCr", "nickname": "蜜蜂娱乐组", "desc": "妻子的浪漫旅行全员下档节目已经被安排好了！#妻子的浪漫旅行 #马頔李纯 #金莎孙丞潇 #孙杨张豆豆 #伊能静秦昊", "like": "8202", "forward": "8598", "fav": "3.2万", "comment": "517", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/tQhvNsjjNcZMhqwXAdibRgpMu3vaDDxPOMBGaEgJ3BeSXvFqw3bNyttXa5Y6qL6o7uekZR1zcxF812CIO3eErhuPxsEic45C26kO3DwQkQGfWVAAbEicppcfxV8sjdotaWb/0"}, "A7CWD0Ebk": {"id": "A7CWD0Ebk", "nickname": "莉莉斯和塞壬", "desc": "别等了，没有人会来。\n #再见爱人#何美延#女性成长#梁淞#亲密关系", "like": "3939", "forward": "1.0万", "fav": "1.4万", "comment": "1260", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/oGb25abIlm6ubZRtibSZTDw99CuibgjlkRUNlDFRbCvU3HnOEvbLHIPKlo6kdsuQMsa4aI2jobgjbKIN7JWrOjdZlYHukS5lCIoaLJFk3UadUatRt2kOL0T9qicJNNJHk63o8K7k9axzAksKejzKvaRAg/0"}, "AtA6uv9AT": {"id": "AtA6uv9AT", "nickname": "马锐老师", "desc": "锐评时尚芭莎年度盛典明星造型，你们觉得我说的对吗？#时尚芭莎年度盛典 #明星 #明星化妆师 #时尚芭莎盛典造型出图", "like": "4191", "forward": "904", "fav": "1.3万", "comment": "578", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/QwOUwqu0TjkIBdWg1XFU3L966EqaT6wgWn0JeZyay35OK7Tico1Oypu3V0lG1kF3kvfFFcP31lL28unpZ6l1WibQ/0"}, "AkqnJ5WkL": {"id": "AkqnJ5WkL", "nickname": "窝头就咸菜", "desc": "穿越GTA之天津卫", "like": "9635", "forward": "1.8万", "fav": "1.2万", "comment": "551", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/tSGqKB1CsYWYPYSZFnDCCdwYkqGdIV937aUWbn7ScIMMoPJDFWziasGNB2pFUmqBQ3ibttZeU84ibB3EEQlc7AMhLU9RHXU58CcTXBBR2fXrGs/0"}, "ABV8NqLDU": {"id": "ABV8NqLDU", "nickname": "汉堡跑不快", "desc": "队友双倒不要慌你可以选择 #三角洲行动 #我要成为三角洲高手", "like": "7289", "forward": "4208", "fav": "1.2万", "comment": "298", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/pKEUqlayWOV25Rb2hgMoGgLTcn760y54MObtrbjv6rEibEYAYoP7icLIwEAZKPxNBWyTgsibeTSn4OrVf6oTAssscOSSfluIGhNIKLC2WzKmX3Txz1ibiasYkOyNzQGuk1KzY/0"}, "Aox0DEeFU": {"id": "Aox0DEeFU", "nickname": "DNF忠诚冒险家", "desc": "佟香愈吃醋展如花#DNF手游 #DNF #DNF手游二觉版本 #武林外传 ", "like": "672", "forward": "2217", "fav": "2617", "comment": "342", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/lxQw3UtPpNntHMWNsCjYtic3xZM1jnGY2SwQUdLP6SmXDPlq7oqicxeJkw4jr28bh3wkuMROKoarwzCfiaHPudx2ASbdSicmhnWCznnKnKqtP26TH3icTNYXs4T6YD7eUewKa/0"}, "A2dE7u5fh": {"id": "A2dE7u5fh", "nickname": "刘敢敢无畏契约", "desc": "看完这波队友的投降键都快按烂了", "like": "2.6万", "forward": "3521", "fav": "1.8万", "comment": "118", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/68m5n2Z99LrvN18ZkDbRRh6K5HmXbySia5hgmBRLbCFllib9gYLlkcd7ZoAa1OSsc0iaWCcXoicX90l3lvzDfOyQOKThOwPBmyEhdyWfCOUbNTlfVib9AflLMwvZfHGaAoiaOzzrTAPQMuw9QG4gNBnIeHww/0"}, "AsaOoPR8W": {"id": "AsaOoPR8W", "nickname": "XXDRCH", "desc": "被翻拍了无数次的电影！每一幕都绝美！#电影 #电影美学", "like": "2.4万", "forward": "6598", "fav": "1.8万", "comment": "475", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/c4yibV9MNtssb5su2xIlOgoqLhgRyWFyibJdGMlTLo6uhFktMBhichd2sBuQFCEPWrru1xLicictMYtzcfVw6K2xNtRdDSJvyzfCxk2FGOuUCVuoLZB09TKzBibhEHSwPn3Sk5/0"}, "A2VGgTeyZ": {"id": "A2VGgTeyZ", "nickname": "barrenlandMyneverland", "desc": "今朝踏破峨嵋顶 明日拔去武当峰\n#卧虎藏龙 #章子怡 \n", "like": "17", "forward": "1", "fav": "17", "comment": "0", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/iaSOq5lmh9Yjmbwo3CfyZ0OysvEmbesyO7gEJEBlT9A7763bSMKjApgusj5keic9EDzgiaaFHBBiaByysDskQTXvgpHEQiaD6goUaPyBQ8ww4G9CbTR3t3licajibyY7TPbpekK/0"}, "AF4sa1sD4": {"id": "AF4sa1sD4", "nickname": "Lee的胶片", "desc": "光是要捧饭碗就已经没力气了#情绪短片", "like": "778", "forward": "240", "fav": "980", "comment": "18", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/tuzxSYuTfIQicTsUqPEjho5qPQQ3oIGLT0DKicYzGHxXSYvXtpUKJ5jyCny57okEHXDPEXicOyakOtYhdE0xpnkK1Nm610WS82tJlJKl9HySSVwkyicKjGpmC3mo78HUwQhbHZCH13cKGFP9rkxYoNe52A/0"}, "ArL6UvU3Z": {"id": "ArL6UvU3Z", "nickname": "玛莎驰个驰", "desc": "跟着《知否》学粤语～", "like": "218", "forward": "194", "fav": "492", "comment": "29", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/3JicOPz9oib62cE8xKaYZPKgbwD4bgBKhVOMAQPL9q39ButUpEqkaeTXkkhNdCyibvTyQYPGOOwoX1Is43LGYpWzuBhcovnJqX5qwALb9DJibicGHgJQsPDZSjSljPTia2yf3T/0"}, "ACmi4yVhe": {"id": "ACmi4yVhe", "nickname": "发呆芽", "desc": "你们有被骗过吗...#小八#乌萨奇#chiikawa#动画#搞笑", "like": "5.4万", "forward": "7.7万", "fav": "7.3万", "comment": "1150", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/6VACwibJFdzLqJ1hTujwicIDrQwbmat7jMY4D9qibntZia2C19RM6poaQ94QBQesHIRffuaWRd1NGLPMnIl7ezdicZzKBfKks0Yxg57AvQHRFzx5NfsTXvPiaSC9Wo6OVavAic3/0"}, "AmGNh9l90": {"id": "AmGNh9l90", "nickname": "yeyeanime", "desc": "", "like": "1479", "forward": "1607", "fav": "3662", "comment": "168", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/y51ge8DkU2lVThG7icH1vg6ZGpz1UA3vN3Qpfc5zWxiaQD4W7N4g7MA4ckvcDjy96R185VicMliag4ksMymsovm1w9mYJJ0A7zPmpG4BayL0sdNZ1WrFtHQkr3yc17bbB9B0/0"}, "AFk8EvsNQ": {"id": "AFk8EvsNQ", "nickname": "一圣的视频号", "desc": "我去不早说\n#夜神月", "like": "1.7万", "forward": "4313", "fav": "2.3万", "comment": "146", "headImg": "https://mmhead.c2c.wechat.com/finderhead/ver_1/nR3aVCkr0Yw5sDTqB4lvet88sibEibBRm2U1Ca34ViaYD8dUPoeOuJFYXD7NAgAYNCTECC8vE33pYK3NaEpe6fVYFtXYcIQvOMZwJY5fE0lHBNpf4bJibwkvNiaRKREonrqf3/0"}, "A9NiixRFr": {"id": "A9NiixRFr", "nickname": "维娜斯的维娜斯", "desc": "日文版#内容过于真实 #火影忍者", "like": "3.1万", "forward": "4034", "fav": "3.6万", "comment": "238", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/8Eb5mSZe9DcOwQhnDOG1NmJt4zMyaiboVr2ibiaRFfCCZFyZmtnzecfUMNfA7YSxrG4RicEITicTt9UjI0owCBfaibTg/0"}, "ARpqyEcXf": {"id": "ARpqyEcXf", "nickname": "LucynotLau", "desc": "给我 一个小小的朋友💜#音乐剧阿兔酱紫#尔多家族_刘昊#幕后花絮#音乐剧@尔多儿童剧团 @尔多有戏", "like": "5831", "forward": "2461", "fav": "1.5万", "comment": "376", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/zB4TSRetuGhrmqRz7ReJSIR9R0uA58NToqJ9rUGl9aVbQG6shxopIedP4x7OcAniaNqTy0IMLTibxmb8GYXecziajwWibNR9Kkue701fyYlkmU0wFic7PJbE8XUv8raGes3OFsfKeyyfKdx97OWKHQJxXZg/0"}, "AUoyb5LgY": {"id": "AUoyb5LgY", "nickname": "小颇-刘佳怡", "desc": "我有勇气我都不怕！#不怕#神兵小将#无声卡清唱", "like": "8875", "forward": "3438", "fav": "2.1万", "comment": "269", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/p8KNnB62KeohtVHQvLMTDlbibB7kgwOLAQuEYs9864COwCuppNsqZe36xDzYoHwRSuvnC0AIxE26EicsotKVlZ9ic8ibHw9QjPlx6HLwWzUME5EdjSezybaB0zNEIuGB6icrB/0"}, "AoFdVhrpA": {"id": "AoFdVhrpA", "nickname": "瑞熙同学", "desc": "久违的阿卡贝拉来啦！ #recordplayer #daisythegreat #阿卡贝拉 #和声 #瑞熙同学", "like": "3608", "forward": "781", "fav": "6198", "comment": "57", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/ZBS1B0UaI1YvZEcUiaUsaHzJ6umibTsEjWdQQDV41v1kPQfWicVicmuXbb5rsAbcCQSB5BN3IE2hvSGpianpuboKNiaRLGrFgia7pQJ8ItCkCGJEMg/0"}, "AURyYNC3u": {"id": "AURyYNC3u", "nickname": "小伙和粥粥", "desc": "双声道《小半》适合耳机听哦", "like": "9.6万", "forward": "2.2万", "fav": "10万+", "comment": "574", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/ga6RgC4HqHDZI5qFJXXqGpycz6km5UFSekT2nuwESprKbg2SxZuVsB1ySDCRQEoGTvgxXHMD4Nfb7eH9A5vRtJpnBb396I1EkyNUDYcdXMI/0"}, "AaSZ342wH": {"id": "AaSZ342wH", "nickname": "浪子辉", "desc": "我应该早点猜到…", "like": "1.1万", "forward": "2.4万", "fav": "3.4万", "comment": "3864", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/hk5V9eOu1ERZic66xMIAVGaeJy1Efuo3YH9UENG8fw6exy0ntIRmA0Vy1TrGfTNGPVXvalEw20MmBjGLojNCwYjTKCo7f56tsjVMOAUpdQS0yL0xLialoBaTib148uUo0Sg/0"}, "AuKWkfaJS": {"id": "AuKWkfaJS", "nickname": "Miss.EvaLee", "desc": "当你的通感涉及到颜色时\n#英语 #语言 #学习 #通感 #神经病 #n人", "like": "9212", "forward": "1546", "fav": "1.2万", "comment": "121", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/m0bEGKPlice9oQXhIxtBnk4BmkjUqbc6Bk0N3or8ST1bUrzCG9VuRXH6sCvgekP39fnmHBOuxjPWdegsBDesw08AVcS0UI7LWBEb9bOx568EENGprwYBhoYQSCSCIv7yv/0"}, "APccORrTD": {"id": "APccORrTD", "nickname": "-黄家荣", "desc": "下次会更快#演练#孕晚期#产前准备#卸货倒计时", "like": "4287", "forward": "1017", "fav": "1.1万", "comment": "187", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/SDmqfp2yic5Jsp43hMlSI3eib5WtEryDgroatUbvGCJ1pqxpNwrKqfkqvTJGnZ2yY8rbgUuhjSLmbRPn6SsvaaTg/0"}, "A12JkBwcb": {"id": "A12JkBwcb", "nickname": "玛莎驰个驰", "desc": "当老妈说我不认真学习长大就要当牛马时……#萌娃 #唐艺昕 #乘风 #唐艺昕烫嘴rap", "like": "129", "forward": "42", "fav": "306", "comment": "8", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/1nLcamWXM0dZqLu4UxsZLY501VtCgrlXhYFZSiaTvoxqzXoicLuwMVYZVWKialltPXn49Dv29lLfRJ3voGuf4htLMN1Y5XtibiciccYwPSPtCu0h1iak6ibQkxJzUU1iaYiawjryrj/0"}, "Ac6r1AWoa": {"id": "Ac6r1AWoa", "nickname": "青竹的家乡", "desc": "小侄女出车祸，人没了。\n我往天上看，\n一切还如我18岁当年，没有差别。\n院子外，宽天宽地，\n只有父亲的脚步声。\n\n父亲企图用忙碌，淹没悲伤，\n家门口，仍是那块麦场。\n父亲装粮食的时候，向天跪着，\n秋风锯他的脖子，长影拖他的后腿。\n\n又是黄昏了，\n他一会儿看天，一会儿看地。\n见谁都用眼泪打听。\n\n猫啊，羊啊，秋千啊！\n我孙女她——\n\n人在哪里呢？\n人在哪里呢？\n\n\n文/青竹\n#青竹散文\n#黄土高坡 \n#我的乡村生活", "like": "4505", "forward": "1258", "fav": "1.2万", "comment": "268", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/lib0KujM5OKUibEvs1ib9p2hHkt8R5kDld9FHurNAvEOLl0ZAlJyI5icD3w4e3DjkbMneZ3K0nBFibR2TskLCS4TibdplFEqaeouo5Wm6Fk7PlG3bl6ibbebicaOtcBqnF16ICAicatMRUcKUv28AgLY09smyjA/0"}, "ANK47qFpf": {"id": "ANK47qFpf", "nickname": "里兰村", "desc": "农民把种子揉进泥土，用双手就种出了春天！这个春天，来广西合山看油菜花吗？#美丽家乡我代言#油菜花#三农#转场#青年创作者扶持计划", "like": "2659", "forward": "1331", "fav": "6418", "comment": "50", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/llt3CADWzG0XYYckOOhicpJmk39uBhZI7x5pzU0YqDbaCCfXeCiaU48egw82Qt432leQiawCbicshNKic7UDNBvVvPpHfR5CGewVxnqrMaZzPGK77xTbLiaEsfhUrEVBzn6P7BcfMAW8QiauDpPdT1SdGesyA/0"}, "Acatl2gXo": {"id": "Acatl2gXo", "nickname": "农民入门指南Official", "desc": "串门教程", "like": "2736", "forward": "2088", "fav": "5511", "comment": "159", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/4NKMLc3Vib6icN33CicjvuaTJUMVjicECDwxbXtClt1MBktF4qDh9bnuB85ibKp6ooxfXMndr1lxEkmMK55Eic8J17xtUM9cib4al8sgBicgQ7AyM5eoJ9GEe3SHonIh7SzPZho8/0"}, "AQgFsEnH4": {"id": "AQgFsEnH4", "nickname": "滇西小哥", "desc": "云南的水果像极了AI生成的～这个假期也来云南感受一下吧！！🍎 #水果 #云南水果 #采摘 #水果自由 #沉浸式", "like": "7454", "forward": "1.3万", "fav": "6800", "comment": "1634", "headImg": "https://wx.qlogo.cn/finderhead/ver_1/5jYYOjNtibdzyibe2GIBuEwpVPcVR9FXhdhSEEiboGX9aLibt7G7bicYzx4CtXRAjwRuhLQFgsR3ImPbsibICkynZcicjkSzpX0pk4HldWeoOORPRE/0"}};
+const CASE_MAP={
+'dance_s1':'An6XgxSsX','dance_s2':'AWjVdCDCb','dance_a1':'AsYS62KLM','dance_a2':'AieogDHpT',
+'travel_s1':'AncCVgzBe','travel_s2':'A0hjro6aU','travel_a1':'AJ7z2HvTv','travel_a2':'A5FkKZFXA',
+'food_s1':'A8LXlgkHe','food_s2':'AuWYQckaQ','food_a1':'Af3J0bnOr','food_a2':'AYgdVX44l',
+'vlog_s1':'AmgXi9wi8','vlog_s2':'AlrHh9eCx','vlog_a1':'AmarTel4F','vlog_a2':'AE5MCtbXs',
+'pet_s1':'ACdhV32tb','pet_s2':'A59pHUJtk','pet_a1':'AKNRwO9QU','pet_a2':'AjNFfPVwz',
+'photo_s1':'A4CKP9Q96','photo_s2':'AWCdg2oUQ','photo_a1':'ACSEDl8sO','photo_a2':'AYTDSbMPb',
+'family_s1':'AhjR8wdPu','family_a1':'AriRn3UKz','family_s2':'ARSjiV7Ch','family_a2':'AxzwWpgDA',
+'sport_s1':'A5sS33biU','sport_a1':'AsPIGdP6T','sport_s2':'AGWvzZ2PU','sport_a2':'AmPCElAxz',
+'fun_s1':'AhkGFbxr6','fun_a1':'AiLURBqCr','fun_s2':'A7CWD0Ebk','fun_a2':'AtA6uv9AT',
+'game_s1':'AkqnJ5WkL','game_a1':'ABV8NqLDU','game_s2':'Aox0DEeFU','game_a2':'A2dE7u5fh',
+'filmtv_s1':'AsaOoPR8W','filmtv_a1':'A2VGgTeyZ','filmtv_s2':'AF4sa1sD4','filmtv_a2':'ArL6UvU3Z',
+'acg_s1':'ACmi4yVhe','acg_a1':'AmGNh9l90','acg_s2':'AFk8EvsNQ','acg_a2':'A9NiixRFr',
+'music_s1':'ARpqyEcXf','music_a1':'AUoyb5LgY','music_s2':'AoFdVhrpA','music_a2':'AURyYNC3u',
+'drama_s1':'AaSZ342wH','drama_a1':'AuKWkfaJS','drama_s2':'APccORrTD','drama_a2':'A12JkBwcb',
+'sannong_s1':'Ac6r1AWoa','sannong_a1':'AQgFsEnH4','sannong_s2':'ANK47qFpf','sannong_a2':'Acatl2gXo'
+};
+const HAS_VIDEO=new Set(['dance','travel','food','vlog','pet','photo','game','filmtv','music','family','drama','sport','fun','sannong']);
+
+const SECTIONS=[
+{id:'general',name:'通用标准',gen:true,over:'GENERAL',title:'通用标准',logic:'',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心定义',items:['内容具备<strong>审美表达+创作意图+个人风格</strong>，本身构成一个完整的"作品"','创作者对题材有深刻理解，对表达方式有自觉选择——内容不是"碰巧好"而是"有意为之"']},
+{t:'表达/制作维度（≥2项）',items:['<strong>个人风格辨识度</strong>：视觉语言、叙事节奏、审美偏好形成系统——多看几条能认出是同一个人','<strong>制作水准突出</strong>：在该垂类中明显高于平均水平，技法运用纯熟且有克制','<strong>作品完成度</strong>：有起承转合和情绪弧线，不是素材堆砌而是有结构的创作','<strong>声画一体</strong>：声音（配乐/环境音/人声）与画面互相增强，经过精心设计']},
+{t:'价值/吸引力维度（≥2项）',items:['看完有<strong>触动</strong>——想分享给朋友或想再看一遍','有<strong>不可替代性</strong>——换一个人做出来的一定不一样','能<strong>激发行动</strong>——想去某个地方/想学某个东西/想关注这个人','有<strong>跨圈传播力</strong>——不限于该垂类的受众也觉得好']}
+]},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心定义',items:['内容有<strong>用心+专业度</strong>——制作投入可感知，但尚未达到"作品"级别的系统性表达','在某些维度上表现优秀（如技术、画面、选题），但整体完成度或独特性还有提升空间']},
+{t:'满足以下≥3项',items:['<strong>有个人视角或态度</strong>：能感受到创作者的选择和判断，不是机械生产','<strong>画面有经营</strong>：构图/色调/光线有意识，色彩有统一方向','<strong>节奏/结构有设计</strong>：有重点突出和详略取舍，时长与内容匹配','<strong>声音/配乐有配合</strong>：BGM情绪与内容匹配，出现和消失有设计','<strong>制作有投入</strong>：花的时间和心思可感知——精心的剪辑/自制字幕/多角度拍摄','<strong>有差异化</strong>：选题独特/视角新颖/信息稀缺——不是大量同类内容的重复']}
+]},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'硬条件（全部满足）',items:['<strong>画面基础合格</strong>：主体清晰可辨、曝光不严重偏差、画面基本稳定','<strong>声音基础合格</strong>：人声可清晰听辨、BGM不盖过核心内容','<strong>内容有完整度</strong>：有可辨识的主题、有基本的起止和完整性','<strong>有基本后期意识</strong>：做了剪辑/字幕/BGM/转场中的至少一项']},
+{t:'典型特征（"合格但平庸"）',items:['内容完整不出错，但<strong>换一个人做差不多</strong>——没有个人烙印','选题、角度不独特，和同垂类大量已有内容高度相似','技术执行"不出错"但"不出彩"——该有的都有但没有任何维度让人想多看一眼']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决项（命中任一即C档）',items:['<strong>搬运/抄袭</strong>：翻录、截取、换音重发、去水印搬运——无原创成分','<strong>画质不可接受</strong>：分辨率<480p、严重模糊噪点、录屏可见播放器UI','<strong>虚假/有害信息</strong>：事实性错误可能造成误导','<strong>违规引流</strong>：内容主体目的是导流外部','<strong>AI批量生产</strong>：AI配音+模板拼接，无人工创作判断']},
+{t:'制作底线未达标',items:['声音不可接受（底噪盖过人声/严重爆音/音画不同步）','无内容价值（看完无法说出这条视频在讲什么）','完成度极低（中途断裂/核心缺失/重复填充）']}
+]}
+]},
+
+{id:'dance',name:'舞蹈',over:'DANCE',title:'舞蹈',logic:'能跳 <em>→</em> 跳得准 <em>→</em> 有表现力 <em>→</em> 有艺术性',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心',items:['舞蹈本身是"表达"而非"展示"——无论是编舞、翻跳、即兴、练习室、舞台演出还是户外实景，通过身体传达情绪、故事或态度，形成完整的视觉艺术作品']},
+{t:'身体与编舞（适用于街舞/古典/现代/民族/芭蕾/拉丁等所有舞种）',items:['<strong>身体控制力达到专业水准</strong>：无论舞种，动作有质感——力度层次分明（重拍有爆发、轻拍有控制）、速度对比鲜明（快慢切换干净利落）、空间运用有意识（高低远近的层次变化）','<strong>编舞/诠释有深度</strong>：原创编舞体现对音乐结构和情感的深度理解（不只是填满节拍）；翻跳有超越模仿的个人化再诠释（加入自己的styling、连接、情绪处理）','<strong>音乐性超越踩拍</strong>：身体对旋律走向、和声变化、音色质感、歌词意境都有回应——能看出ta在"听"音乐而不只是"数"节拍']},
+{t:'画面呈现',items:['场景/服装/光线/拍摄角度经过<strong>精心选择</strong>，与舞蹈主题形成统一表达——练习室的raw感、舞台的氛围感、户外的意境感各有其美','多场景/多机位/运镜设计为叙事服务——不是一个固定机位的练习录像','作为短视频"作品"有完整度——有开场的铺垫、有高潮的释放、有收尾的余韵']}
+],cases:['dance_s1','dance_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['舞蹈技术功底扎实，有超越"翻跳"的个人化处理——但整体呈现尚未达到"作品"级']},
+{t:'身体与表现',items:['在该舞种中达到<strong>中上水平</strong>，基本功可见（柔韧/力量/协调性/isolation/脚下功夫）','有<strong>表情管理和情绪投入</strong>——能看出ta知道自己在表达什么，不是机械完成动作','即使是翻跳，也有个人处理痕迹（styling变化/律动味道/连接方式/细节填充）']},
+{t:'拍摄与制作',items:['有意识的拍摄选择：角度/景别/场景，而非"架个手机就拍"','服装与舞蹈风格基本适配','与S档关键差异：<strong>A是"跳得好+拍得有想法"，S是"舞蹈×画面×音乐=完整艺术表达"——A的各要素是"加分项"，S的各要素是"一体化设计"</strong>']}
+],cases:['dance_a1','dance_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['动作与音乐节拍全程同步，不存在可感知的延迟或提前','画面完整（需展示的身体部分全程可见），不跳出画面','每个动作完成度达标——该到位的到位，无明显失误','场地/着装基本得体，不影响观看']},
+{t:'典型不足',items:['标准翻跳，和教学视频一模一样——无个人处理/无styling变化','动作"到位"但缺"质感"——力量层次不够/流畅度不够/切点不干净','表情管理缺失（面无表情或全程傻笑），拍摄为固定正面单一机位']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['动作模糊/帧率低导致看不清在跳什么','节奏与音乐明显不同步（超过半拍以上偏差）','频繁忘动作（停顿/看手机/回头看参考）','画面严重裁切——全身舞只看到半身/群舞只看到一个人','搬运/录屏翻拍其他平台内容']}
+]}
+]},
+
+{id:'travel',name:'旅行',over:'TRAVEL',title:'旅行',logic:'到此一游 <em>→</em> 有美感 <em>→</em> 有表达 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于攻略/人文纪实/极限探险/房车徒步/城市探索/美食旅行等所有形态）',items:['旅行不只是目的地展示——无论是攻略分享、人文纪实、极限探险还是城市漫步，它成为一种<strong>叙事媒介</strong>，承载态度、故事或人生感悟']},
+{t:'画面与制作',items:['达到旅行纪录片/品牌TVC的<strong>视觉水准</strong>——光线/构图/调色有统一的美学体系','运镜手法（航拍/延时/稳定器/长曝/水下等）恰当运用，<strong>服务于情绪</strong>而非炫技','配乐/旁白/环境音经过精心选择，与视觉形成互相增强的关系——探险的紧张、人文的温暖、城市的节奏各有适配']},
+{t:'内容深度',items:['有完整的<strong>故事弧线或情感主线</strong>——不是"去了A然后去了B"的景点罗列','选题/目的地/切入角度有<strong>稀缺性</strong>——不是所有人都能拍到的画面或经历（冷门秘境/深度在地体验/极端环境挑战）','攻略类有体系化信息架构+独到见解（不是抄大众点评）；纪实类有文化洞察+个人感悟（不是流水账）；探险类有真实的冒险感+专业呈现']}
+],cases:['travel_s1','travel_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['画面有明显高于普通旅行视频的审美水准，且内容有一定独特性——但整体叙事或表达深度尚有空间']},
+{t:'表现',items:['构图/光线/调色明显经过用心处理——至少有几个"让人想截图"的画面','有航拍/稳定器/多角度切换/延时等进阶拍摄手法中的至少一种','目的地本身有视觉冲击力，或拍摄者找到了独特的呈现角度','攻略类信息有价值（实用+有选择眼光）；纪实类有真实体验感；探险类有现场感','与S档关键差异：<strong>A有"好看的画面+有用的信息"但缺"完整的叙事"或"深层的表达"——是优质旅行记录但还不是旅行作品</strong>']}
+],cases:['travel_a1','travel_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['有明确旅行主题/目的地，画面清晰展示了目的地特征','有基本后期（字幕/BGM/剪辑），内容完整']},
+{t:'典型不足',items:['和同目的地其他100个视频没区别——相同打卡点/相同角度/相同BGM','纯景点罗列式流水账，无个人感受/判断/筛选','攻略类信息搬运（抄小红书/大众点评无附加值）']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['纯打卡照/手机直出无后期/画面模糊严重抖动','搬运旅游宣传片/他人游记/无署名转载','攻略信息虚假过时（价格/交通/开放时间错误）/纯AI配音+网图轮播']}
+]}
+]},
+
+{id:'food',name:'美食',over:'FOOD',title:'美食',logic:'拍明白 <em>→</em> 有食欲 <em>→</em> 会讲究 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于教程菜谱/探店测评/食材科普/美食旅行/ASMR视觉系等所有形态）',items:['食物呈现达到"广告片"级视觉水准，且有超越"做菜/吃饭"的表达层次——无论是家庭烹饪教程、街头美食探访、食材溯源、还是ASMR视觉盛宴，都让食物成为文化/情感/美学的载体']},
+{t:'视觉',items:['<strong>布光有设计</strong>：侧光让食物有立体感和油润质感/逆光勾勒轮廓/色温暖调(3200-4500K)——而非顶光死白或冷光惨淡','构图有层次——器皿/食材/道具/环境之间有空间经营和色彩搭配','运镜服务于食物展示（特写纹理/环绕全貌/升降变化/ASMR类的微距特写）','调色精准克制——"好看"和"真实"之间取得平衡，食物色彩不失真']},
+{t:'内容深度',items:['食物与人/地域/文化/季节有连接——不是硬塞旁白，是叙事中自然生长的','教程类：有方法论而非单菜谱（火候原理/食材选择逻辑/失败原因分析）；探店类：有评价体系和品味（不是"好好吃哦"）；科普类：有知识密度和趣味（食品科学/风味原理/产地故事）','有个人辨识度——"遮住ID看画面就知道是谁"的视觉语言或内容调性']}
+],cases:['food_s1','food_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['食物"看起来好吃"——有系统的引发食欲的视觉处理，内容有一定专业度或独特性']},
+{t:'表现',items:['暖色温+自然侧光+景深控制+动态食欲镜头(拉丝/冒烟/浇汁/切面展示)满足≥3项','有烹饪音效与画面同步（锅气声/切菜声/碳酸气泡/ASMR咀嚼声）','教程类有讲究感（火候经验/避坑提示/精确用量）；探店类有评价维度和信息增量；科普类有知识点清晰呈现','色调统一有调色意图，多角度展示食物质感','与S档关键差异：<strong>A有"食欲感+专业度"但缺"灵魂"——好看好馋/信息有用，但没有文化深度/叙事层次或不可替代的个人风格</strong>']}
+],cases:['food_a1','food_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['食物清晰可辨/色彩基本真实/有意识的拍摄角度（非随手一拍）','教程完整可跟做/探店有基本信息（地点/价格/推荐菜）/测评有结论']},
+{t:'典型不足',items:['食物"能看清"但"不馋"——缺少引发食欲的视觉处理','角度单一/无音效设计/调色直出/BGM随意','教程只有步骤无原理/探店只有"好吃"无维度/千篇一律同质化']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['食物不是画面主体/色彩严重失真(冷白灯/过暗/绿色色偏)','教程不可跟做(无步骤无用量无火候)/探店无任何有效信息','纯文字PPT+AI配音/搬运带水印/虚假探店(收费推广不标注)']}
+]}
+]},
+
+{id:'vlog',name:'VLOG',over:'VLOG',title:'VLOG/生活记录',logic:'在记录 <em>→</em> 会记录 <em>→</em> 有视角 <em>→</em> 有表达',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于独居日常/职业记录/异国生活/手作DIY/搬家装修/学习日常等所有形态）',items:['vlog本身构成一个"作品"——无论是独居日常、职业幕后、异国生活、手作过程还是搬家装修，都有明确的表达意图、个人视觉语言和完成度']},
+{t:'表现',items:['有个人视觉<strong>风格签名</strong>——调色/构图/转场/字体形成可识别的视觉体系（看到画面就知道是谁）','叙事有精心<strong>取舍</strong>——围绕主题/情绪精选素材，有起承转合，不是"今天做了ABCDE"的流水账','声音设计有层次——环境音+旁白+BGM三层有主次和进退（独居的安静感/职业的节奏感/异国的新鲜感）','选题有<strong>独特性</strong>——稀缺的记录对象/独特的生活方式/大多数人经历不到的视角/平凡生活中发现不平凡的角度','内容有层次——表层是日常画面，底层有态度/思考/情感——看完会对某种生活方式多一层理解']}
+],cases:['vlog_s1','vlog_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有用心记录的痕迹——画面有审美、节奏有设计、选题有趣味，但"作品感"不足']},
+{t:'表现',items:['画面有经营（构图/色调/取景有意识），色调基本统一','有主题聚焦（独居的一天/某个手作项目/装修某个环节），时长和内容匹配不注水','能感受到"这个人"的存在——有态度/有性格/有选择，不是流水线内容','与S档关键差异：<strong>A有"好看+有趣+有人味"但还不是"作品"——缺完整表达意图或视觉语言的系统性，素材选择还不够精准克制</strong>']}
+],cases:['vlog_a1','vlog_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['有明确主题/画面清晰/有基本剪辑和字幕BGM/内容完整']},
+{t:'典型不足',items:['无个人视角(换人做差不多)/BGM随机配/纯记录无表达','手作/DIY只有过程无审美/学习日常只有打卡无心得/独居日常只有吃喝无态度']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['碎片无主题/纯口水话自拍/无筛选流水账','搬运模仿(同款文案+BGM+调色)/画面严重晃动/无任何后期','假装记录实际引流卖货/AI生成的虚假生活']}
+]}
+]},
+
+{id:'pet',name:'宠物',over:'PET',title:'宠物',logic:'拍到了 <em>→</em> 拍可爱了 <em>→</em> 会讲故事 <em>→</em> 有温度',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于日常记录/科普养护/救助领养/训练教学/宠物与自然/多宠互动等所有形态）',items:['情感超越"好可爱"——无论是日常萌宠、科普养护、流浪救助、训练过程还是自然互动，都有陪伴/成长/生命的温度，能打动非宠物主']},
+{t:'表现',items:['有完整<strong>故事弧线</strong>（铺垫→发展→高潮→情感落点）——每条是"故事"非"片段"','画面有讲究——光线/构图捕捉毛发质感和表情细节（眼神/耳朵/尾巴的微表情）','剪辑节奏精心设计——快慢/留白/特写有章法，节奏服务于情绪','配乐精准（节奏与宠物动作/情绪配合，不千篇一律用"可爱BGM"）','<strong>克制</strong>：不靠煽情BGM+慢镜头+"它只有你"强行催泪——情感从画面自然生长','科普类有专业深度+通俗表达；救助类有真实过程+不卖惨；训练类有方法论+效果展示']}
+],cases:['pet_s1','pet_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['宠物有"角色感"，内容有叙事节奏和创作意识——但情感深度或制作精度尚有空间']},
+{t:'表现',items:['宠物有鲜明"性格人设"——内容围绕这个性格展开（傲娇/社牛/戏精/黏人）','有铺垫→冲突/反差→结果的<strong>节奏设计</strong>（哪怕15秒也有起伏）','有意识的拍摄（宠物视角/景别切换），配音/字幕有人格化创作','人宠互动真实自然——不是零食诱导快剪伪造','科普类信息准确有价值；救助类记录真实可信；训练类方法正确可操作','与S档关键差异：<strong>A有"角色感+叙事节奏"但没达到"打动非宠物主"的情感深度和制作精度——圈内觉得不错，圈外不一定被打动</strong>']}
+],cases:['pet_a1','pet_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['宠物主体清晰/光线充足/有微事件（不是纯静态趴着）','有基本时机捕捉（表情瞬间/有趣行为）','科普/养护信息基本准确/训练方法无安全隐患']},
+{t:'典型不足',items:['全程一个视角跟拍/同质化/"我家猫又XX了"/无叙事节奏','千篇一律的"萌"——没有这只宠物独特的性格呈现']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['主体模糊/光线昏暗/环境杂乱','无事件性（静态随拍）/纯照片轮播+AI配音','搬运/萌宠合集截取/虐待动物/科普信息严重错误危害宠物健康']}
+]}
+]},
+
+{id:'photo',name:'摄影',over:'PHOTO',title:'摄影',logic:'拍清楚 <em>→</em> 有风格 <em>→</em> 会表达 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于风光/人文/街拍/人像/微距/航拍/建筑/纪实/观念等所有细分）',items:['光影/色彩/构图不只是"好看"——它们在<strong>传达情绪或观点</strong>，无论是壮阔的风光、细微的街头瞬间、还是微距下的另一个世界，画面本身在说话']},
+{t:'表现',items:['光线是"表达工具"——用光的选择服务于主题（冷调=疏离/暖调=温暖/高对比=戏剧/柔光=梦幻），不是"恰好赶上好光线"','构图是"叙事语言"——空间安排、视线引导、元素关系都在传递信息，风光有纵深层次/人文有决定性瞬间/人像有情绪氛围/微距有发现感','运镜和内容情绪匹配——缓慢=宁静/快速=紧张/长镜头=沉浸/快剪=节奏','有<strong>主题性</strong>和系列感——统一的观察视角，不是散装好看画面——能看出持续的创作方向','能看出作者的审美偏好和价值观——作品像"动态摄影展"，有策展意识']}
+],cases:['photo_s1','photo_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有"摄影技术+创作意识"——无论哪个细分方向，作品是"创作"而非"记录"']},
+{t:'表现',items:['能主动控光或善于捕捉最佳光线时刻（golden hour/逆光/侧光/夜景长曝）','构图超越基础规则——前景纵深/框架引导/留白运用/对称破缺','调色统一且有意图——不只是"加了滤镜"而是有明确色彩方向','运镜有设计感——推拉摇移/升降/环绕各服务于展示对象','选题垂直有深度——在某个视觉方向上有持续探索（不是今天拍花明天拍人后天拍建筑无方向感）','与S档关键差异：<strong>A是"拍得好+有想法"，S是"画面本身在说话——有情绪/观点/态度"——A让人说"拍得真好"，S让人说"看完有触动"</strong>']}
+],cases:['photo_a1','photo_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['画面清晰/曝光正常/主体明确/有基本构图意识','有后期调色（不是直出）/有基本运镜']},
+{t:'典型不足',items:['画面"正确"而非"动人"——像按教科书做的标准答案','风光只有"好看"没有"感受"/人像只有"好看"没有"情绪"/街拍只有"记录"没有"观察"']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['画面模糊/过曝欠曝/主体不明/构图混乱','后期失当（过度HDR/饱和度爆/失真滤镜/AI一键出图无创作判断）','到此一游打卡照/搬运他人摄影作品/低质滤镜堆砌']}
+]}
+]},
+
+{id:'music',name:'音乐',over:'MUSIC',title:'音乐',logic:'能唱能弹 <em>→</em> 有水平 <em>→</em> 有风格 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于翻唱cover/乐器演奏/原创音乐/编曲beatmaking/音乐科普乐理/音乐剧舞台/街头busking/合唱阿卡贝拉等所有形态）',items:['技术之上有表达——无论是人声演唱、乐器演奏、原创作品、编曲制作还是音乐剧片段，不是"完成"一首歌而是"讲述"一首歌']},
+{t:'表现',items:['有明确的<strong>个人音乐风格</strong>——遮住画面听30秒能辨识（独特的音色处理/编曲品味/情感表达方式）','原创或"再创作"级改编——作品有"只有这个人能做出来"的不可替代性（风格重编/和声重构/语言转换/跨风格融合）','<strong>情感穿透力</strong>：能让非专业听众被触动，专业听众觉得"真的懂这首歌"','制作水准接近可发行级别（混音干净/频段均衡/戴耳机不暴露问题/多轨叠录有层次）','声画一体：画面服务于音乐表达——演奏过程有沉浸感/有MV级视觉叙事/剪辑与音乐结构同步/街头演出有现场氛围']}
+],cases:['music_s1','music_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有个人诠释和可感知的技术投入，但独特性或制作精度尚有空间']},
+{t:'表现',items:['<strong>有个人诠释</strong>：音色运用/节奏处理/情感投入/即兴加花中至少一方面有个人化处理（不是"还原原曲"）','技术有亮点——翻唱类：稳定高音/干净转音/有控制力的气息运用；乐器类：速度/音色/即兴能力可感知；编曲类：音色选择/节奏型设计有创意','录音质量好（专业设备或至少手机外接麦/有层次感/无明显底噪）','编曲改编有创意（改和弦走向/加和声层次/风格重编/器乐重新编配）','画面有设计感（不是手机支架正面直录）/选曲有品味（不只追热门）','与S档关键差异：<strong>A有"个人诠释+技术可圈可点"但缺"不可替代性"——改得好听但还不是"只有ta能做出来"的水平</strong>']}
+],cases:['music_a1','music_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['音准基本正确/节奏稳定/音质可接受（不影响收听）','有真实演唱或演奏（非纯对口型/纯MIDI无演奏画面）','完成度达标（完整段落/无明显断裂/不中途垮掉）']},
+{t:'典型不足',items:['基本是"还原原曲"无个人诠释/手机直录声音扁平/画面单一固定机位','科普/乐理类信息正确但呈现枯燥/编曲展示只是软件操作录屏无讲解']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['音质不可接受(底噪/爆音/严重失真)/系统性跑调(不是偶尔一两个音)/节奏完全跟不住','纯对口型+原曲播放(假唱)/播放器录屏翻录/AI合成翻唱(无真人演唱成分)','歌词滚动视频+网图轮播/搬运他人演出视频/MIDI直出无创作判断']}
+]}
+]},
+
+{id:'family',name:'亲子',over:'FAMILY',title:'亲子',logic:'在拍娃 <em>→</em> 有互动 <em>→</em> 有温度 <em>→</em> 有启发',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于日常记录/教育学习/亲子旅行/成长记录/育儿理念/才艺展示等所有形态）',items:['展现<strong>真实不做作的亲子关系</strong>——无论是日常互动、亲子旅行、教育探索、成长里程碑还是才艺展示，都有超越"晒娃"的情感深度或教育启发']},
+{t:'表现',items:['亲子互动<strong>真实自然</strong>——不是家长导演/孩子表演的"秀"，能看到真实的情感流动（包括不完美的瞬间）','有情感深度——看到亲子关系中的理解/尊重/成长/冲突与和解，传递出一种家庭哲学或育儿价值观','画面/剪辑有品质：光线温暖自然、节奏适配内容（欢乐的快/温情的慢）、配乐克制不煽情','选题有独特性——教育类有独到理念不人云亦云；旅行类有亲子视角的发现；成长记录有时间跨度的力量；才艺展示有过程而非只有结果','能引发为人父母者的<strong>共鸣或反思</strong>——有教育意义但不说教，是"我也想这样"而非"你应该这样"']}
+],cases:['family_s1','family_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['记录有趣味和温度，亲子互动有看点，内容有用心——但深度或制作精度尚有空间']},
+{t:'表现',items:['孩子的个性/反应有真实的趣味性或感染力——能让非该年龄段家长也觉得有意思','有基本的叙事节奏——不是碎片堆砌，有主题聚焦（一次旅行/一个教育moment/一个成长节点）','画面清晰有基本审美，环境不杂乱，孩子状态自然','教育类有可参考的方法或视角；才艺展示有练习过程或教学分享','与S档关键差异：<strong>A有"可爱+有趣+有温度"但缺"深度"——停留在记录层面未升华为表达，是"好看的亲子日常"而非"让人反思的亲子作品"</strong>']}
+],cases:['family_a1','family_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['孩子清晰可见/有基本互动事件/有后期处理','内容完整有主题（一次出行/一个活动/一个日常片段）']},
+{t:'典型不足',items:['标准"晒娃"模式——"我家宝宝真可爱"但和其他万千晒娃号无差异','无个人教育理念/无叙事设计/无情感层次/才艺展示只有结果无过程']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['画面模糊暗淡/环境杂乱/孩子明显不愿配合被强迫拍摄','过度消费孩子隐私（暴露敏感信息/刻意展示尴尬窘迫场景）','刻意制造冲突/危险场景博流量/搬运他人亲子内容','AI配音+萌娃照片轮播/虚假摆拍"神童""天才"误导家长']}
+]}
+]},
+
+{id:'sport',name:'运动',over:'SPORT',title:'运动',logic:'在动 <em>→</em> 动得好 <em>→</em> 有感染力 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于教学训练/高光记录/比赛赛事/运动生活方式/传统武术民间体育/极限运动/运动科普等所有形态）',items:['运动内容达到"作品"水准——无论是健身教学、比赛高光、极限运动纪录、训练日常、传统武术展示还是运动医学科普，都有<strong>专业深度+视觉感染力+个人辨识度</strong>']},
+{t:'教学/训练类',items:['有<strong>体系化训练方法论</strong>——不是散装"每天5分钟"，有底层运动科学逻辑（解剖学/运动力学/能量系统）','能将复杂运动知识"降维"传达——让零基础也能理解原理、进阶者也能获得新认知','画面有品质感：多角度/慢动作拆解/运镜流畅/关键肌群标注/调色统一']},
+{t:'记录/展示类（高光、极限、比赛、武术、生活方式）',items:['<strong>视觉冲击力+专业呈现</strong>：高光集锦有叙事不只是堆砌；极限运动有沉浸感（第一人称/航拍/水下）+风险真实感；比赛解说有专业洞察和情绪节奏','传统武术/民间体育展示有文化厚度——不只是"打一套"，有功法渊源/身体哲学/训练体系的呈现','运动与生活方式/心理健康有机结合——有人文深度，展现运动如何塑造一个人']},
+{t:'通用S档特征',items:['<strong>感染力</strong>——看完想立刻动起来/想了解这项运动/想成为这样的人——不是因为焦虑而是因为被状态感染','有个人辨识度——不是"又一个健身博主"或"又一个跑步vlog"，有鲜明的运动哲学和表达方式']}
+],cases:['sport_s1','sport_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有专业度+制作投入+一定的个人特色，但体系性/感染力/作品完成度尚有空间']},
+{t:'教学/训练类',items:['有"发力感"教学或专业的动作展示，动作标准安全','有错误纠正/针对性建议/训练逻辑——不只是动作演示','画面制作有质感（多角度/慢放/字幕标注关键点）']},
+{t:'记录/展示类',items:['高光集锦剪辑有节奏/极限运动画面有视觉冲击/比赛解说有个人风格','传统武术动作有功底——不是"比划两下"','运动日常/生活方式有真实感和感染力']},
+{t:'通用A档特征',items:['人设真实可信——体态/状态和表达一致，让人愿意跟练/愿意看','与S档关键差异：<strong>A有"专业+用心"但缺"方法论体系"或"灵魂感染力"——教学类教得对但未成体系/记录类好看但未成作品/科普类准确但未成风格</strong>']}
+],cases:['sport_a1','sport_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['动作安全正确（教学类无伤害隐患）/画面清晰稳定/运动主体可看清','有明确的运动主题和基本完整度/有基本后期（字幕/BGM/剪辑）','信息类（科普/解说）内容准确无误导']},
+{t:'典型不足',items:['教学类模式化——"XX部位5个动作"只有what没有why/千篇一律无差异','记录类无叙事——流水账训练日记/纯打卡无内容/比赛录像无剪辑无解说','科普类信息搬运——抄百科全书无个人理解']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['教学动作有安全隐患（错误发力/危险示范无警告）/科普信息错误可能造成运动损伤','画面模糊看不清动作/录屏翻拍/纯身材展示无运动内容','搬运他人训练视频/健身房镜子自拍+计数/AI配音+运动图片轮播','比赛盗播/侵犯赛事版权/虚假运动成绩宣传']}
+]}
+]},
+
+{id:'fun',name:'娱乐',over:'FUN',title:'娱乐',logic:'有看点 <em>→</em> 有设计 <em>→</em> 有创意 <em>→</em> 有品质',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于脱口秀stand-up/街头社会实验/才艺表演/魔术特效/模仿变装/品牌IP拟人化/综艺感日常/时尚点评等所有形态）',items:['娱乐内容达到"作品"水准——无论是脱口秀、街头实验、魔术、模仿变装还是品牌拟人，都有独特的<strong>喜剧/娱乐方法论</strong>，创意有技术含量']},
+{t:'表现',items:['有独特的<strong>娱乐风格签名</strong>——脱口秀有个人喜剧方法论（冷幽默/荒诞/反讽/自嘲/黑色幽默）；模仿有超越形似的神韵捕捉；实验有精巧的社会观察；品牌拟人有人格化创意','创意有"意想不到"的巧妙——看完想二刷或分析"怎么想出来的"，不是套路化的信息差反转','制作水准接近综艺/短片级别（多机位/调色/音效/后期包装/特效精良）','娱乐之外有<strong>思考</strong>——最好的喜剧底下有对人性/社会/文化的观察（笑完会想一下）','有品牌辨识度——看到内容就知道是谁+能破圈传播（非该垂类受众也觉得好）']}
+],cases:['fun_s1','fun_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['娱乐内容有设计感和独特性——但尚未形成系统的风格或达到"作品"级制作']},
+{t:'表现',items:['脱口秀/段子有巧思——反转不俗套/有多层嵌套或前后回调','街头实验有策划深度——不是"随便问路人"/有真实反应的记录','才艺/魔术技术明显高于业余，表演有感染力和"综艺感"','模仿/变装有制作投入（化妆/服装/场景还原）且有二创成分（不只是COS）','品牌IP拟人有人格一致性和持续输出能力','剪辑节奏精准/有自己的内容形式或人设','与S档关键差异：<strong>A有"好笑/好看+有设计"但缺"独特风格体系"或"制作精度"——单条出彩但还没形成"看到就知道是ta"的辨识度</strong>']}
+],cases:['fun_a1','fun_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['内容合规有基本娱乐性/有完整度/画面声音达标/有后期处理']},
+{t:'典型不足',items:['模式化——"街头采访问尴尬问题""情侣挑战""路人改造"套路可预测','包袱/笑点依赖信息差和夸张表演，一笑了之不记住/不想二刷','变装/模仿只有形似无神韵/魔术揭秘搬运无原创']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['低俗恶俗博眼球（恶搞路人/侵犯他人尊严/以丑为美）','搬运综艺/脱口秀片段无二创/蹭热点无原创内容','AI配音+明星照片轮播批量八卦/虚假爆料造谣/街头实验造假欺骗观众']}
+]}
+]},
+
+{id:'game',name:'游戏',over:'GAME',title:'游戏',logic:'在玩 <em>→</em> 玩得好 <em>→</em> 讲得好 <em>→</em> 有创造力',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于高光操作/攻略教学/剧情叙事向/创意整活/游戏评测分析/电竞解说/游戏引擎创作等所有形态）',items:['游戏内容有<strong>独创性</strong>——无论是操作集锦、攻略教学、剧情向创作、创意整活还是深度评测，不是在游戏框架内"玩得好"，而是创造了新的价值']},
+{t:'表现',items:['原创玩法/创意整活/极限挑战/用游戏引擎做非游戏内容（短片/音乐/建筑/艺术）——突破游戏本身的边界','深度分析达"策划/设计师"层面——讲清游戏设计意图/Meta演化逻辑/数值体系/关卡哲学','剧情/叙事向创作有导演水准——有完整故事弧线/情绪设计/声画配合/角色塑造','电竞解说有专业洞察——不是"哇好厉害"而是讲清决策逻辑/团队配合/关键转折点','剪辑/后期达短片级别——有完整叙事结构/音效设计/节奏精准/调色统一','有鲜明的个人风格和IP——不是"游戏博主"而是"XX（品牌）"，能吸引<strong>非该游戏玩家</strong>也觉得有趣']}
+],cases:['game_s1','game_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有超越"录像"的内容价值——操作/攻略/解说/评测有独到之处，但创新性或制作精度尚有空间']},
+{t:'表现',items:['操作/技术有说服力——可验证的高水平（段位/成绩/操作复杂度）','攻略有独到价值——自己发现的技巧/独特的条件分析/效率对比数据','评测/分析有深度——不是"画面好看玩法好玩"而是有评价框架和独立判断','电竞解说有个人风格辨识度/游戏引擎创作有创意但完成度一般','剪辑有章法（节奏/慢放/标记/时长精准）/有游戏理解深度（决策逻辑/Meta理解）','与S档关键差异：<strong>A在游戏框架内"做得好+有想法"，S超越框架"创造了新东西"——A是优秀的游戏内容，S是碰巧用游戏为载体的创作</strong>']}
+],cases:['game_a1','game_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['画质≥720p帧率≥30/有基本剪辑（不是完整对局直播录像）','有字幕或解说/内容有主题（不是"随便玩玩"）','信息准确（攻略可用/评测数据不错）']},
+{t:'典型不足',items:['同质化——"吃鸡集锦""五杀合集""新手教学"和同类万千视频无差别','解说无个性/对游戏理解停留在表面（只说what不说why）','评测/分析像"说明书朗读"无个人观点和深度']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['帧率低/画面模糊/完整对局录屏无剪辑无解说','搬运带水印/标题虚假夸张（"最强攻略""99%人不知道"实际无干货）','TTS配音+拼接画面批量内容/游戏外挂/作弊教程/盗版游戏推广']}
+]}
+]},
+
+{id:'filmtv',name:'影视综',over:'FILM&TV',title:'影视综',logic:'能剪 <em>→</em> 会剪 <em>→</em> 有想法 <em>→</em> 有作品感',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于混剪MAD/影评解说/幕后揭秘/原片二创配音吐槽/综艺cut/经典片段重新诠释等所有形态）',items:['二创本身构成独立"作品"——无论是混剪/MAD、影评解说、幕后揭秘还是吐槽配音，都通过创作者的加工赋予原片<strong>新的意义</strong>']},
+{t:'混剪/MAD类',items:['声画关系精心设计（台词×配乐交织/画面×歌词互文/动作×节奏精确对应）','通过剪辑创造了全新叙事——看完会<strong>重新理解原作品</strong>（不是原片精彩片段堆砌）','有"只有这首歌配这些画面"的不可替代感/剪辑节奏有个人签名']},
+{t:'解说/评论/揭秘类',items:['影评/解说有<strong>独到的分析框架</strong>——不是"这部片讲了一个故事"而是揭示创作手法/主题隐喻/时代背景/导演意图','幕后揭秘有稀缺信息+专业视角（懂制作工艺/懂行业生态）','原片二创（配音/吐槽）有二次创作含量——不是"加个段子"而是构建了新的叙事层']},
+{t:'通用S档特征',items:['选题/角度独特——不跟风热映片或跟风但切入完全不同','能同时满足该片观众（有料有深度）和泛观众（有趣能看懂）']}
+],cases:['filmtv_s1','filmtv_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有个人理解和创意——剪辑/评论/二创体现超越"搬运"的创作投入，但深度或精度尚有空间']},
+{t:'表现',items:['混剪类：叙事有起承转合/卡点精准（动作起止与音乐节拍精确对应）/素材选取有理由','解说类：有独到解读/引用原片论据/有评价框架（不只是复述剧情）','二创类：配音/吐槽有梗有包袱/综艺cut有重新剪辑和节奏设计','有进阶剪辑手法（速度变化/声画分离/蒙太奇/遮罩转场）','与S档关键差异：<strong>A是"剪得好/讲得好+有想法"，S是"创造了新的作品——有独立于原片的价值"——A让人说"这个混剪/解说不错"，S让人说"我看完对这部片有了新的理解"</strong>']}
+],cases:['filmtv_a1','filmtv_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['画质≥720p无外站水印/有基本剪辑逻辑/配乐与画面基本匹配','有可辨识的主题或观点（不是随机片段拼凑）']},
+{t:'典型不足',items:['标准"高燃混剪"模板——配乐跟风热门/手法只有"切"/对原作无新理解','解说只是复述剧情+个人感想无分析框架/综艺cut只是截取无再加工','二创/吐槽的笑点依赖原片本身而非创作者的加工']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['原片直切无创作成分（盗版分发）/画质劣化严重(录屏带播放器UI)','带外站水印/素材随机拼接+热门BGM无逻辑/封面标题极度夸张与内容不符','AI配音+剧照轮播"3分钟看完XX"/解说信息严重错误/未上映内容泄露']}
+]}
+]},
+
+{id:'acg',name:'二次元',over:'ACG',title:'二次元',logic:'有内容 <em>→</em> 有用心 <em>→</em> 有创造 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于原创绘画手绘过程/COS摄影/MAD-AMV/动漫解析评论/手办模型展示/声优翻唱翻配/同人创作等所有形态）',items:['创作/分析达到<strong>专业水准</strong>——无论是原创绘画、COS摄影、MAD/AMV、动漫深度解析、手办制作还是声优翻配，都有跨圈传播能力']},
+{t:'创作类（绘画/COS/MAD/同人/声优）',items:['原创绘画可参展/商用级别，画风有辨识度，手绘过程展示有教学价值或创作揭秘的魅力','COS达"真人还原"+摄影作品级画面（打光/构图/后期/场景），有角色理解的深度（不只是外形像）','MAD/AMV声画一体可参赛级别——音乐×画面×情感形成完整叙事','声优翻唱/翻配有专业水准（音色/情感/角色把握），不是"模仿"是"诠释"','同人创作有独立的故事性/艺术性，超越"原作衍生"成为独立作品']},
+{t:'分析/展示类（解析/评论/手办）',items:['分析能揭示作品深层主题/创作意图/产业背景——让看过原作的人获得新理解','手办/模型展示有摄影品质（布光/构图/微缩场景搭建）+专业点评（涂装/可动/原型对比）','对某领域有<strong>体系化输出</strong>——构成"看这个领域绕不开的账号"']},
+{t:'通用S档特征',items:['能同时打动核心二次元受众(专业/有料)和泛受众(有趣/看得懂)——不是圈地自萌']}
+],cases:['acg_s1','acg_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有明显的创作投入或分析深度——圈层理解到位，但跨圈传播力或作品完成度尚有空间']},
+{t:'表现',items:['原创绘画有个人画风和系统功底/手绘过程有观赏性','COS有制作水平（服装道具/化妆）和拍摄创意（不只是"穿上衣服站着拍"）','MAD素材精准+配乐深层对应+剪辑有节奏感','分析有独到解读+引用原作论据+用语得当（不是"百度百科读一遍"）','手办展示有拍摄品质/声优翻配有功底','对二次元亚文化有真实理解——不是外行硬蹭（用语/梗/圈层礼仪到位）','与S档关键差异：<strong>A在圈内"做得好+被认可"，S能"跨圈打动不看动漫的人"——A是优秀的二次元内容，S是碰巧以二次元为载体的优秀作品</strong>']}
+],cases:['acg_a1','acg_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['内容与二次元文化相关/信息准确（角色名/剧情/术语不出错）','素材达标（不是截图拼凑）/有主题完整度/有基本后期']},
+{t:'典型不足',items:['大众已知信息重新包装——无独立见解/无新增价值','视觉靠素材拼贴+BGM模板/COS只有"穿上衣服"无表演和摄影/MAD只是"精彩片段+热门BGM"']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['手机拍屏幕截图/搬运画师作品无授权/AI批量生成二次元图片','信息错误(角色名/剧情/创作者搞错)/纯表情包壁纸合集/挂二次元封面实际引流','COS色情擦边/恶意歪曲原作角色/侵犯创作者权益']}
+]}
+]},
+
+{id:'drama',name:'剧情演绎',over:'DRAMA',title:'剧情演绎',logic:'有剧本 <em>→</em> 演得住 <em>→</em> 有巧思 <em>→</em> 有品质',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于搞笑短剧/悬疑反转/温情治愈/讽刺社会批评/系列IP短剧/古风年代剧/实验性叙事等所有形态）',items:['短剧达到<strong>影视级完成度</strong>——无论是搞笑、悬疑、温情、讽刺还是实验性叙事，都有剧本精巧+表演自然+制作精良的"三合一"']},
+{t:'剧本',items:['有<strong>真正的巧思</strong>——搞笑类反转不依赖信息差/悬疑类逻辑自洽经得起推敲/温情类情感不靠煽情台词硬拉/讽刺类观察精准不说教','剧本结构精密——多层嵌套/伏笔回收/情理之中意料之外/前后呼应','系列IP短剧有角色成长弧线和世界观连贯性/古风年代剧有时代质感和细节考究']},
+{t:'表演与制作',items:['表演自然——演员真的"成为角色"而非"在演"（台词节奏/微表情/肢体语言都可信）','制作接近微电影水准：多机位/打光考究/调色统一/音效设计/场景适配','实验性叙事有形式创新——打破传统短剧框架的尝试（非线性/打破第四面墙/交互感）']},
+{t:'通用S档特征',items:['娱乐之外有<strong>洞察</strong>——好的剧情底下有对人性/关系/社会的观察——看完想推荐给别人+值得二刷分析','有系列感或角色深度——不是一次性消耗品']}
+],cases:['drama_s1','drama_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['剧本有设计感+表演有基本可信度——但制作精度或深度尚有空间']},
+{t:'表现',items:['搞笑类反转/包袱设计不俗套——至少有一个"没想到"的点/悬疑类有基本逻辑闭合','温情类情感有铺垫不生硬/讽刺类角度有新意不陈词滥调','表演不尴尬——至少主角的表情/语气/节奏可信（不出戏）','剪辑节奏得当——该快的快该慢的慢不注水','古风/年代剧服化道有基本诚意/系列有基本的人物一致性','有自己的内容调性（搞笑/悬疑/温情/讽刺能选择一个并做好）','与S档关键差异：<strong>A是"看得下去+有惊喜"，S是"想推荐给别人+值得分析"——A让人说"这个短剧不错"，S让人说"这是短视频里的好电影"</strong>']}
+],cases:['drama_a1','drama_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['有完整剧情（开头→冲突→结局）/画面声音达标/有基本表演','剧情逻辑基本说得通/不靠字幕解释画面应该表达的内容']},
+{t:'典型不足',items:['套路化反转（身份互换/扮猪吃虎/霸总灰姑娘）/表演用力过猛','制作粗糙（单机位/无打光/环境音嘈杂）/古风剧只有服装无时代感']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['剧情逻辑混乱（前后矛盾/强行反转无因果）/表演极度尴尬','搬运他人短剧/纯文字卡点+AI配音/低俗擦边剧情','价值观导向负面（美化PUA/家暴/霸凌）/制造性别/地域/职业对立博流量']}
+]}
+]},
+
+{id:'sannong',name:'三农',over:'SANNONG',title:'三农',logic:'在拍 <em>→</em> 有真实感 <em>→</em> 有表达 <em>→</em> 有灵魂',
+grades:[
+{g:'s',label:'S档 · 优质',groups:[
+{t:'核心（适用于田园生活记录/农技种养殖知识/乡村美食制作/传统手艺非遗/返乡创业故事/乡村风光航拍/助农农产品展示等所有形态）',items:['真实乡土生活本身构成<strong>有温度的叙事作品</strong>——无论是田园日常、农技分享、乡村美食、传统手艺还是返乡创业，都不是猎奇展示而是有情感厚度的乡村表达']},
+{t:'视觉与制作',items:['画面有审美经营——光线（晨雾/夕照/灶火/雨雪）、构图（田野纵深/人物与环境关系/劳作的仪式感）、色彩（自然调性不失真不灰暗）','声音设计有层次——自然环境音（虫鸣/流水/锅灶声/鸡鸣犬吠/风声雨声）与旁白/配乐形成氛围','航拍/延时用于展现乡村大地之美时有"纪录片感"——不是无意义的炫技']},
+{t:'内容深度',items:['有完整的<strong>叙事弧线或情感主线</strong>——围绕农事/食物/家庭/季节/手艺讲一个有起承转合的故事','有<strong>文化厚度</strong>——传统农技中的智慧（节气/土壤/品种选择）/非遗手艺的工艺揭秘/地方风物的人文积淀/返乡创业的真实困难与收获','有<strong>真实的乡土生活质感</strong>——烟火气、四季变化、劳作节奏自然流露，不是摆拍的"田园秀"','有个人辨识度——风格、叙事节奏、取景偏好形成系统，看几条就能认出是谁']}
+],cases:['sannong_s1','sannong_s2']},
+{g:'a',label:'A档 · 高潜',groups:[
+{t:'核心',items:['有真实生活的记录诚意和一定的制作投入——但叙事深度或视觉系统性尚有空间']},
+{t:'表现',items:['内容真实不做作——展示的是<strong>真正在过的生活</strong>，不是为拍视频搭建的"农村景"','有画面意识：取景/光线有选择，色调基本统一，食物/农产品展示有食欲感','有基本的叙事节奏——不是碎片堆砌，有主题聚焦和详略取舍','农技/种养殖有<strong>知识含量或实操价值</strong>（品种选择/病虫害防治/养殖经验）——看完能学到东西','乡村美食制作有在地特色——不是"农村版网红菜谱"而是当地真实饮食','传统手艺/非遗展示有工艺过程和文化背景/助农有真实产品和诚信呈现','人物有感染力——朴实但有个性，让人想关注这个人的生活','与S档关键差异：<strong>A有"真实+用心+有价值"但缺"作品感"——好看好看，但还没形成完整的视觉叙事体系或文化表达的深度</strong>']}
+],cases:['sannong_a1','sannong_a2']},
+{g:'b',label:'B档 · 中性',groups:[
+{t:'达标条件（全部满足）',items:['内容真实完整/有明确的农事或乡村生活主题/画面清晰/有基本后期','农技/种养殖信息准确无误导/美食制作可操作/助农产品真实']},
+{t:'典型不足',items:['和同类三农账号没有差异化——纯记录无个人视角/流水账式"今天做了XX"','农技科普像"教科书朗读"无实操感/乡村美食和城市"家常菜"教程无区别']}
+]},
+{g:'c',label:'C档 · 普通及以下',groups:[
+{t:'一票否决（命中任一即C）',items:['明显摆拍造假（城里人演农村人/假装种地实际摆拍/虚假"原生态"）','画面极差/纯搬运/以猎奇/卖惨/低俗为噱头博流量','AI配音+农村图片轮播/虚假助农带货（非实际产品/虚假产地）','农技信息错误可能造成种养殖损失/非遗展示歪曲事实']}
+]}
+]}
+];
+
+// Nav icon mapping
+const NAV_ICONS={
+  general:'\u2605',photo:'\uD83D\uDCF7',food:'\uD83C\uDF73',music:'\uD83C\uDFB5',dance:'\uD83D\uDC83',
+  drama:'\uD83C\uDFAD',filmtv:'\uD83C\uDFAC',acg:'\u2B50',vlog:'\uD83C\uDFA5',travel:'\u2708',
+  pet:'\uD83D\uDC3E',family:'\uD83D\uDC76',sannong:'\uD83C\uDF3E',game:'\uD83C\uDFAE',sport:'\u26BD',fun:'\uD83C\uDF89'
+};
+
+// Sidebar navigation groups
+const NAV_GROUPS=[
+  {label:null,items:['general']},
+  {label:'\u5185\u5BB9\u521B\u4F5C',items:['photo','food','music','dance','drama','filmtv','acg']},
+  {label:'\u751F\u6D3B\u8BB0\u5F55',items:['vlog','travel','pet','family','sannong']},
+  {label:'\u4E92\u52A8\u5A31\u4E50',items:['game','sport','fun']}
+];
+
+function mc(fk,g,land){
+  const sid=CASE_MAP[fk];if(!sid||!FEED[sid])return null;const d=FEED[sid];
+  return{file:fk,grade:g,author:d.nickname,avatar:d.headImg,
+    desc:(d.desc||'').split('\n')[0].trim().substring(0,80),
+    stats:'\uD83D\uDC4D'+d.like+' \u00b7 \u8F6C\u53D1'+d.forward+' \u00b7 \u6536\u85CF'+d.fav+' \u00b7 \u8BC4\u8BBA'+d.comment,
+    landscape:!!land};
+}
+
+function buildSidebar(){
+  const nav=document.getElementById('sidebarNav');
+  const secMap={};
+  SECTIONS.forEach(s=>{secMap[s.id]=s});
+
+  NAV_GROUPS.forEach((group,gi)=>{
+    if(group.label){
+      const lbl=document.createElement('div');
+      lbl.className='nav-group-label';
+      lbl.textContent=group.label;
+      nav.appendChild(lbl);
+    }
+    group.items.forEach(id=>{
+      const sec=secMap[id];if(!sec)return;
+      const item=document.createElement('div');
+      item.className='nav-item'+(sec.gen?' gen-item':'')+(gi===0&&group.items[0]===id?' active':'');
+      item.dataset.id=id;
+      item.innerHTML='<span class="nav-icon">'+( NAV_ICONS[id]||'\u25CB')+'</span><span>'+sec.name+'</span>';
+      item.onclick=()=>switchSection(id);
+      nav.appendChild(item);
+    });
+  });
+}
+
+function render(){
+  const mn=document.getElementById('mn');
+  SECTIONS.forEach((sec,si)=>{
+    const div=document.createElement('div');
+    div.className='sec'+(si===0?' on':'');
+    div.id='s-'+sec.id;
+
+    let h='<div class="sec-header"><div class="sec-overtitle">'+sec.over+'</div><h2 class="sec-title">'+sec.title+'</h2>';
+    if(sec.logic){h+='<div class="sec-logic">'+sec.logic+'</div>';}
+    if(sec.gen){
+      h+='<div class="grade-legend"><span><i class="dot-s"></i>S\u00b7\u4F18\u8D28</span><span><i class="dot-a"></i>A\u00b7\u9AD8\u6F5C</span><span><i class="dot-b"></i>B\u00b7\u4E2D\u6027</span><span><i class="dot-c"></i>C\u00b7\u666E\u901A\u53CA\u4EE5\u4E0B</span></div>';
+    }
+    h+='</div>';
+
+    sec.grades.forEach((gr,gi)=>{
+      const isOpen=gi<2;
+      let bd='';
+      gr.groups.forEach(g=>{
+        bd+='<div class="rule-group"><h4>'+g.t+'</h4><ul class="rule-list">';
+        g.items.forEach((item,idx)=>{
+          bd+='<li data-num="'+(idx+1)+'">'+item+'</li>';
+        });
+        bd+='</ul></div>';
+      });
+
+      if(gr.cases){
+        const cases=gr.cases.map(fk=>{
+          const cat=fk.split('_')[0];
+          const land=['travel'].includes(cat);
+          return mc(fk,gr.g,land);
+        }).filter(Boolean);
+        if(cases.length){
+          bd+='<div class="case-divider"><div class="case-divider-icon">\uD83D\uDCCC</div><div class="case-divider-text">\u5178\u578B\u6848\u4F8B</div></div>';
+          bd+='<div class="case-grid">';
+          cases.forEach(c=>{
+            const catKey=c.file.split('_')[0];
+            const hasV=HAS_VIDEO.has(catKey);
+            const mediaHtml=hasV?
+              '<div class="case-video'+(c.landscape?' land':'')+'" onclick="tv(this,event)"><video src="\u6848\u4F8B\u7D20\u6750/videos/'+c.file+'.mp4" poster="\u6848\u4F8B\u7D20\u6750/videos/'+c.file+'_thumb.jpg" preload="metadata" playsinline></video><div class="play-btn"><svg viewBox="0 0 64 64"><path d="M24 16l24 16-24 16z"/></svg></div></div>':
+              '<div class="case-video'+(c.landscape?' land':'')+'"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--s2);color:var(--t3);font-size:12px">\u89C6\u9891\u5F85\u8865\u5145</div></div>';
+            const gl=c.grade==='s'?'S\u00b7\u4F18\u8D28':'A\u00b7\u9AD8\u6F5C';
+            bd+='<div class="case-card">'+mediaHtml+'<div class="case-info"><div class="case-author"><div class="case-avatar"><img src="'+c.avatar+'" onerror="this.parentElement.innerHTML=\'<div style=padding:4px;text-align:center;font-size:11px>'+c.author[0]+'</div>\'"/></div><span class="case-name">'+c.author+'</span><span class="case-grade-tag '+c.grade+'">'+gl+'</span></div><div class="case-desc">'+c.desc+'</div><div class="case-stats">'+c.stats+'</div></div></div>';
+          });
+          bd+='</div>';
+        }
+      }
+
+      h+='<div class="grade-panel g-'+gr.g+(isOpen?' open':'')+' fade-in-view">';
+      h+='<div class="grade-head" onclick="this.parentElement.classList.toggle(\'open\')">';
+      h+='<span class="grade-badge g'+gr.g+'">'+gr.g.toUpperCase()+'</span>';
+      h+='<span class="grade-label">'+gr.label+'</span>';
+      h+='<span class="grade-arrow">\u25BE</span>';
+      h+='</div>';
+      h+='<div class="grade-body"><div class="grade-inner">'+bd+'</div></div>';
+      h+='</div>';
+    });
+
+    div.innerHTML=h;
+    mn.appendChild(div);
+  });
+}
+
+function switchSection(id){
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.id===id));
+  // Update content
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));
+  // Scroll to top
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Close mobile sidebar
+  if(window.innerWidth<=900){closeSidebar();}
+  // Re-observe fade-in elements
+  requestAnimationFrame(()=>observeFadeIns());
+}
+
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const hb=document.getElementById('hamburger');
+  const ov=document.getElementById('sidebarOverlay');
+  const isOpen=sb.classList.contains('open');
+  if(isOpen){closeSidebar();}else{
+    sb.classList.add('open');hb.classList.add('open');
+    ov.classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+}
+function closeSidebar(){
+  const sb=document.getElementById('sidebar');
+  const hb=document.getElementById('hamburger');
+  const ov=document.getElementById('sidebarOverlay');
+  sb.classList.remove('open');hb.classList.remove('open');
+  ov.classList.remove('show');
+  document.body.style.overflow='';
+}
+
+function tv(w,e){
+  e.stopPropagation();const v=w.querySelector('video');if(!v)return;
+  if(v.paused){
+    document.querySelectorAll('.case-video video').forEach(x=>{if(x!==v){x.pause();x.parentElement.classList.remove('playing')}});
+    v.play();w.classList.add('playing');
+  }else{v.pause();w.classList.remove('playing');}
+}
+
+// Scroll fade-in observer
+function observeFadeIns(){
+  const els=document.querySelectorAll('.fade-in-view:not(.visible)');
+  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');obs.unobserve(en.target);}});
+  },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el=>obs.observe(el));
+}
+
+// Init
+buildSidebar();
+render();
+observeFadeIns();
+</script>
+</div>
+<script>
+const PW_HASH="31820eee4188342d4595b2884bb573b2b6dfc685e7cb9bfbe3c2bc4705fc5897";
+async function checkPw(){
+const inp=document.getElementById("pw-input");
+const v=inp.value;
+const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));
+const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+if(hash===PW_HASH){
+document.getElementById("pw-gate").classList.add("hidden");
+document.getElementById("main-content").classList.add("unlocked");
+sessionStorage.setItem("pw_ok","1");
+setTimeout(()=>document.getElementById("pw-gate").remove(),600);
+}else{
+inp.classList.add("shake");
+document.getElementById("pw-err").textContent="密码错误，请重试";
+setTimeout(()=>inp.classList.remove("shake"),400);
+}
+}
+if(sessionStorage.getItem("pw_ok")==="1"){
+document.getElementById("pw-gate").classList.add("hidden");
+document.getElementById("main-content").classList.add("unlocked");
+setTimeout(()=>document.getElementById("pw-gate").remove(),100);
+}
+</script>
+</body>
+</html>
