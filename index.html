@@ -310,36 +310,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);line-height:1.7
   .grade-inner{padding:4px 16px 20px}
 }
 </style>
-
-<style>
-#pw-gate{position:fixed;inset:0;z-index:10000;background:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .5s}
-#pw-gate.hidden{opacity:0;pointer-events:none}
-#pw-gate h2{font-family:'Noto Serif SC',serif;font-size:24px;color:#e8e6e1;font-weight:700;letter-spacing:1px}
-#pw-gate p{font-size:13px;color:#6b6863;max-width:320px;text-align:center;line-height:1.6}
-#pw-gate .pw-box{display:flex;gap:8px;align-items:center}
-#pw-gate input{background:#1c1c1c;border:1px solid #333;border-radius:6px;padding:10px 16px;font-size:15px;color:#e8e6e1;outline:none;width:220px;font-family:inherit;letter-spacing:1px}
-#pw-gate input:focus{border-color:#c8a96e}
-#pw-gate input.shake{animation:shake .4s}
-@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
-#pw-gate button{background:#c8a96e;color:#0a0a0a;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
-#pw-gate button:hover{background:#d4b97a}
-#pw-gate .pw-err{font-size:12px;color:#c45c5c;height:18px}
-#main-content{display:none}
-#main-content.unlocked{display:block}
-</style>
+<style>#pw-gate{position:fixed;inset:0;z-index:10000;background:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .5s}#pw-gate.hidden{opacity:0;pointer-events:none}#pw-gate h2{font-family:"Noto Serif SC",serif;font-size:24px;color:#e8e6e1;font-weight:700}#pw-gate p{font-size:13px;color:#6b6863;max-width:320px;text-align:center;line-height:1.6}#pw-gate .pw-box{display:flex;gap:8px}#pw-gate input{background:#1c1c1c;border:1px solid #333;border-radius:6px;padding:10px 16px;font-size:15px;color:#e8e6e1;outline:none;width:220px;font-family:inherit}#pw-gate input:focus{border-color:#c8a96e}#pw-gate input.shake{animation:shake .4s}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}#pw-gate button{background:#c8a96e;color:#0a0a0a;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer}#pw-gate button:hover{background:#d4b97a}#pw-gate .pw-err{font-size:12px;color:#c45c5c;height:18px}#main-content{display:none}#main-content.unlocked{display:block}</style>
 </head>
-<body>
-<div id="pw-gate">
-<h2>🔒 内容审美分级标准</h2>
-<p>此文档仅限内部团队查阅<br>请输入访问密码</p>
-<div class="pw-box">
-<input type="password" id="pw-input" placeholder="输入密码" onkeydown="if(event.key==='Enter')checkPw()">
-<button onclick="checkPw()">进入</button>
-</div>
-<div class="pw-err" id="pw-err"></div>
-</div>
-<div id="main-content">
-
+<body><div id="pw-gate"><h2>🔒 内容审美分级标准</h2><p>此文档仅限内部团队查阅<br>请输入访问密码</p><div class="pw-box"><input type="password" id="pw-input" placeholder="输入密码" onkeydown="if(event.key==='Enter')checkPw()"><button onclick="checkPw()">进入</button></div><div class="pw-err" id="pw-err"></div></div><div id="main-content">
 
 <!-- Hamburger (mobile) -->
 <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
@@ -392,19 +365,19 @@ grades:[
 {t:'价值/吸引力维度（≥2项）',items:['看完有<strong>触动</strong>——想分享给朋友或想再看一遍','有<strong>不可替代性</strong>——换一个人做出来的一定不一样','能<strong>激发行动</strong>——想去某个地方/想学某个东西/想关注这个人','有<strong>跨圈传播力</strong>——不限于该垂类的受众也觉得好']}
 ]},
 {g:'a',label:'A档 · 高潜',groups:[
-{t:'核心定义',items:['内容有<strong>用心+专业度</strong>——制作投入可感知，但尚未达到"作品"级别的系统性表达','在某些维度上表现优秀（如技术、画面、选题），但整体完成度或独特性还有提升空间']},
-{t:'满足以下≥3项',items:['<strong>有个人视角或态度</strong>：能感受到创作者的选择和判断，不是机械生产','<strong>画面有经营</strong>：构图/色调/光线有意识，色彩有统一方向','<strong>节奏/结构有设计</strong>：有重点突出和详略取舍，时长与内容匹配','<strong>声音/配乐有配合</strong>：BGM情绪与内容匹配，出现和消失有设计','<strong>制作有投入</strong>：花的时间和心思可感知——精心的剪辑/自制字幕/多角度拍摄','<strong>有差异化</strong>：选题独特/视角新颖/信息稀缺——不是大量同类内容的重复']}
+{t:'核心定义',items:['内容有<strong>用心+专业度</strong>——制作投入或创意投入可感知，但尚未达到"作品"级别的系统性表达','在某些维度上表现优秀（如技术、画面、选题、创意、情绪设计），但整体完成度或独特性还有提升空间']},
+{t:'满足以下≥3项（制作维度和创意/价值维度各至少1项）',items:['<strong>【制作维度】</strong>','<strong>画面有经营</strong>：构图/色调/光线有意识，色彩有统一方向','<strong>节奏/结构有设计</strong>：有重点突出和详略取舍，时长与内容匹配','<strong>声音/配乐有配合</strong>：BGM情绪与内容匹配，出现和消失有设计','<strong>制作有投入</strong>：花的时间和心思可感知——精心的剪辑/自制字幕/多角度拍摄/创意脚本设计/音效选择/节奏编排/素材筛选组合','<strong>【创意/价值维度】</strong>','<strong>有个人视角或态度</strong>：能感受到创作者的选择和判断，不是机械生产','<strong>有差异化</strong>：选题独特/视角新颖/信息稀缺——不是大量同类内容的重复','<strong>创意密度高</strong>：在有限时长内信息量/梗/巧思的密度明显高于同类——即使制作简单也让人想二刷','<strong>情绪价值突出</strong>：能精准击中特定受众的情感需求（共鸣/治愈/燃/解压），引发高互动']}
 ]},
 {g:'b',label:'B档 · 中性',groups:[
 {t:'硬条件（全部满足）',items:['<strong>画面基础合格</strong>：主体清晰可辨、曝光不严重偏差、画面基本稳定','<strong>声音基础合格</strong>：人声可清晰听辨、BGM不盖过核心内容','<strong>内容有完整度</strong>：有可辨识的主题、有基本的起止和完整性','<strong>有基本后期意识</strong>：做了剪辑/字幕/BGM/转场中的至少一项']},
 {t:'典型特征（"合格但平庸"）',items:['内容完整不出错，但<strong>换一个人做差不多</strong>——没有个人烙印','选题、角度不独特，和同垂类大量已有内容高度相似','技术执行"不出错"但"不出彩"——该有的都有但没有任何维度让人想多看一眼']}
 ]},
 {g:'c',label:'C档 · 普通及以下',groups:[
-{t:'一票否决项（命中任一即C档）',items:['<strong>搬运/抄袭</strong>：翻录、截取、换音重发、去水印搬运——无原创成分','<strong>画质不可接受</strong>：分辨率<480p、严重模糊噪点、录屏可见播放器UI','<strong>虚假/有害信息</strong>：事实性错误可能造成误导','<strong>违规引流</strong>：内容主体目的是导流外部','<strong>AI批量生产</strong>：AI配音+模板拼接，无人工创作判断']},
-{t:'制作底线未达标',items:['声音不可接受（底噪盖过人声/严重爆音/音画不同步）','无内容价值（看完无法说出这条视频在讲什么）','完成度极低（中途断裂/核心缺失/重复填充）']}
+{t:'一票否决项（命中任一即C档）',items:['<strong>搬运/抄袭</strong>：翻录、截取、换音重发、去水印搬运——无原创成分','<strong>画质不可接受</strong>：分辨率<480p、严重模糊噪点、录屏可见播放器UI','<strong>虚假/有害信息</strong>：事实性错误可能造成误导','<strong>违规引流</strong>：内容主体目的是导流外部','<strong>AI批量生产</strong>：AI配音+模板拼接，且无可辨识的人工创作判断——关键标志是"换一个话题用同样的流程也能产出"。注意：使用AI工具辅助创作（如AI辅助剪辑/AI配音但有人工脚本设计/AI绘画但有个人审美选择）不自动判定为C，需看整体是否有创作者意志的介入']},
+{t:'制作底线未达标',items:['声音不可接受（底噪盖过人声/严重爆音/音画不同步）','无内容价值（看完无法说出这条视频在讲什么）','完成度极低（中途断裂/核心缺失/重复填充）']},
+{t:'⚠️ 关于"制作简单但创意密度高"的内容判定指引',items:['短视频生态中存在一类内容：制作手法简单（单机位/无复杂后期），但<strong>创意密度极高/情绪击中精准/在受众中引发强烈共鸣</strong>','不应仅因"制作简单"就限制在B档——如果创意/脚本/节奏设计有明确的"设计意图"，应按A档考量','判断核心是"这个内容是否有创作者的主观选择和设计"，而非"是否用了多机位/调色/转场"','典型场景：脱口秀式单机位表达但内容极精彩、同人配音但情感设计精准、梗文化但创意密度极高、游戏高光集锦但节奏编排有匠心']}
 ]}
 ]},
-
 {id:'dance',name:'舞蹈',over:'DANCE',title:'舞蹈',logic:'能跳 <em>→</em> 跳得准 <em>→</em> 有表现力 <em>→</em> 有艺术性',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -425,7 +398,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['动作模糊/帧率低导致看不清在跳什么','节奏与音乐明显不同步（超过半拍以上偏差）','频繁忘动作（停顿/看手机/回头看参考）','画面严重裁切——全身舞只看到半身/群舞只看到一个人','搬运/录屏翻拍其他平台内容']}
 ]}
 ]},
-
 {id:'travel',name:'旅行',over:'TRAVEL',title:'旅行',logic:'到此一游 <em>→</em> 有美感 <em>→</em> 有表达 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -445,7 +417,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['纯打卡照/手机直出无后期/画面模糊严重抖动','搬运旅游宣传片/他人游记/无署名转载','攻略信息虚假过时（价格/交通/开放时间错误）/纯AI配音+网图轮播']}
 ]}
 ]},
-
 {id:'food',name:'美食',over:'FOOD',title:'美食',logic:'拍明白 <em>→</em> 有食欲 <em>→</em> 会讲究 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -465,7 +436,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['食物不是画面主体/色彩严重失真(冷白灯/过暗/绿色色偏)','教程不可跟做(无步骤无用量无火候)/探店无任何有效信息','纯文字PPT+AI配音/搬运带水印/虚假探店(收费推广不标注)']}
 ]}
 ]},
-
 {id:'vlog',name:'VLOG',over:'VLOG',title:'VLOG/生活记录',logic:'在记录 <em>→</em> 会记录 <em>→</em> 有视角 <em>→</em> 有表达',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -484,7 +454,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['碎片无主题/纯口水话自拍/无筛选流水账','搬运模仿(同款文案+BGM+调色)/画面严重晃动/无任何后期','假装记录实际引流卖货/AI生成的虚假生活']}
 ]}
 ]},
-
 {id:'pet',name:'宠物',over:'PET',title:'宠物',logic:'拍到了 <em>→</em> 拍可爱了 <em>→</em> 会讲故事 <em>→</em> 有温度',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -503,7 +472,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['主体模糊/光线昏暗/环境杂乱','无事件性（静态随拍）/纯照片轮播+AI配音','搬运/萌宠合集截取/虐待动物/科普信息严重错误危害宠物健康']}
 ]}
 ]},
-
 {id:'photo',name:'摄影',over:'PHOTO',title:'摄影',logic:'拍清楚 <em>→</em> 有风格 <em>→</em> 会表达 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -522,7 +490,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['画面模糊/过曝欠曝/主体不明/构图混乱','后期失当（过度HDR/饱和度爆/失真滤镜/AI一键出图无创作判断）','到此一游打卡照/搬运他人摄影作品/低质滤镜堆砌']}
 ]}
 ]},
-
 {id:'music',name:'音乐',over:'MUSIC',title:'音乐',logic:'能唱能弹 <em>→</em> 有水平 <em>→</em> 有风格 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -541,7 +508,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['音质不可接受(底噪/爆音/严重失真)/系统性跑调(不是偶尔一两个音)/节奏完全跟不住','纯对口型+原曲播放(假唱)/播放器录屏翻录/AI合成翻唱(无真人演唱成分)','歌词滚动视频+网图轮播/搬运他人演出视频/MIDI直出无创作判断']}
 ]}
 ]},
-
 {id:'family',name:'亲子',over:'FAMILY',title:'亲子',logic:'在拍娃 <em>→</em> 有互动 <em>→</em> 有温度 <em>→</em> 有启发',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -560,7 +526,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['画面模糊暗淡/环境杂乱/孩子明显不愿配合被强迫拍摄','过度消费孩子隐私（暴露敏感信息/刻意展示尴尬窘迫场景）','刻意制造冲突/危险场景博流量/搬运他人亲子内容','AI配音+萌娃照片轮播/虚假摆拍"神童""天才"误导家长']}
 ]}
 ]},
-
 {id:'sport',name:'运动',over:'SPORT',title:'运动',logic:'在动 <em>→</em> 动得好 <em>→</em> 有感染力 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -583,7 +548,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['教学动作有安全隐患（错误发力/危险示范无警告）/科普信息错误可能造成运动损伤','画面模糊看不清动作/录屏翻拍/纯身材展示无运动内容','搬运他人训练视频/健身房镜子自拍+计数/AI配音+运动图片轮播','比赛盗播/侵犯赛事版权/虚假运动成绩宣传']}
 ]}
 ]},
-
 {id:'fun',name:'娱乐',over:'FUN',title:'娱乐',logic:'有看点 <em>→</em> 有设计 <em>→</em> 有创意 <em>→</em> 有品质',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -602,7 +566,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['低俗恶俗博眼球（恶搞路人/侵犯他人尊严/以丑为美）','搬运综艺/脱口秀片段无二创/蹭热点无原创内容','AI配音+明星照片轮播批量八卦/虚假爆料造谣/街头实验造假欺骗观众']}
 ]}
 ]},
-
 {id:'game',name:'游戏',over:'GAME',title:'游戏',logic:'在玩 <em>→</em> 玩得好 <em>→</em> 讲得好 <em>→</em> 有创造力',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -610,8 +573,8 @@ grades:[
 {t:'表现',items:['原创玩法/创意整活/极限挑战/用游戏引擎做非游戏内容（短片/音乐/建筑/艺术）——突破游戏本身的边界','深度分析达"策划/设计师"层面——讲清游戏设计意图/Meta演化逻辑/数值体系/关卡哲学','剧情/叙事向创作有导演水准——有完整故事弧线/情绪设计/声画配合/角色塑造','电竞解说有专业洞察——不是"哇好厉害"而是讲清决策逻辑/团队配合/关键转折点','剪辑/后期达短片级别——有完整叙事结构/音效设计/节奏精准/调色统一','有鲜明的个人风格和IP——不是"游戏博主"而是"XX（品牌）"，能吸引<strong>非该游戏玩家</strong>也觉得有趣']}
 ],cases:['game_s1','game_s2']},
 {g:'a',label:'A档 · 高潜',groups:[
-{t:'核心',items:['有超越"录像"的内容价值——操作/攻略/解说/评测有独到之处，但创新性或制作精度尚有空间']},
-{t:'表现',items:['操作/技术有说服力——可验证的高水平（段位/成绩/操作复杂度）','攻略有独到价值——自己发现的技巧/独特的条件分析/效率对比数据','评测/分析有深度——不是"画面好看玩法好玩"而是有评价框架和独立判断','电竞解说有个人风格辨识度/游戏引擎创作有创意但完成度一般','剪辑有章法（节奏/慢放/标记/时长精准）/有游戏理解深度（决策逻辑/Meta理解）','与S档关键差异：<strong>A在游戏框架内"做得好+有想法"，S超越框架"创造了新东西"——A是优秀的游戏内容，S是碰巧用游戏为载体的创作</strong>']}
+{t:'核心',items:['有超越"录像"的内容价值——操作/攻略/解说/评测有独到之处，<strong>或具备强烈的观赏性/娱乐性</strong>，但创新性或制作精度尚有空间']},
+{t:'表现',items:['操作/技术有说服力——可验证的高水平（段位/成绩/操作复杂度）','攻略有独到价值——自己发现的技巧/独特的条件分析/效率对比数据','评测/分析有深度——不是"画面好看玩法好玩"而是有评价框架和独立判断','电竞解说有个人风格辨识度/游戏引擎创作有创意但完成度一般','剪辑有章法（节奏/慢放/标记/时长精准）/有游戏理解深度（决策逻辑/Meta理解）','与S档关键差异：<strong>A在游戏框架内"做得好+有想法"，S超越框架"创造了新东西"——A是优秀的游戏内容，S是碰巧用游戏为载体的创作</strong>','<strong>高光集锦有叙事弧线或情绪设计</strong>——不只是"好操作的堆砌"而是有节奏编排/氛围营造/关键时刻的放大处理','<strong>梗/创意整活有完整度</strong>——虽然是"玩梗"但有起承转合/有制作包装/有二创价值']}
 ],cases:['game_a1','game_a2']},
 {g:'b',label:'B档 · 中性',groups:[
 {t:'达标条件（全部满足）',items:['画质≥720p帧率≥30/有基本剪辑（不是完整对局直播录像）','有字幕或解说/内容有主题（不是"随便玩玩"）','信息准确（攻略可用/评测数据不错）']},
@@ -621,7 +584,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['帧率低/画面模糊/完整对局录屏无剪辑无解说','搬运带水印/标题虚假夸张（"最强攻略""99%人不知道"实际无干货）','TTS配音+拼接画面批量内容/游戏外挂/作弊教程/盗版游戏推广']}
 ]}
 ]},
-
 {id:'filmtv',name:'影视综',over:'FILM&TV',title:'影视综',logic:'能剪 <em>→</em> 会剪 <em>→</em> 有想法 <em>→</em> 有作品感',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -642,7 +604,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['原片直切无创作成分（盗版分发）/画质劣化严重(录屏带播放器UI)','带外站水印/素材随机拼接+热门BGM无逻辑/封面标题极度夸张与内容不符','AI配音+剧照轮播"3分钟看完XX"/解说信息严重错误/未上映内容泄露']}
 ]}
 ]},
-
 {id:'acg',name:'二次元',over:'ACG',title:'二次元',logic:'有内容 <em>→</em> 有用心 <em>→</em> 有创造 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -663,7 +624,6 @@ grades:[
 {t:'一票否决（命中任一即C）',items:['手机拍屏幕截图/搬运画师作品无授权/AI批量生成二次元图片','信息错误(角色名/剧情/创作者搞错)/纯表情包壁纸合集/挂二次元封面实际引流','COS色情擦边/恶意歪曲原作角色/侵犯创作者权益']}
 ]}
 ]},
-
 {id:'drama',name:'剧情演绎',over:'DRAMA',title:'剧情演绎',logic:'有剧本 <em>→</em> 演得住 <em>→</em> 有巧思 <em>→</em> 有品质',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -674,17 +634,16 @@ grades:[
 ],cases:['drama_s1','drama_s2']},
 {g:'a',label:'A档 · 高潜',groups:[
 {t:'核心',items:['剧本有设计感+表演有基本可信度——但制作精度或深度尚有空间']},
-{t:'表现',items:['搞笑类反转/包袱设计不俗套——至少有一个"没想到"的点/悬疑类有基本逻辑闭合','温情类情感有铺垫不生硬/讽刺类角度有新意不陈词滥调','表演不尴尬——至少主角的表情/语气/节奏可信（不出戏）','剪辑节奏得当——该快的快该慢的慢不注水','古风/年代剧服化道有基本诚意/系列有基本的人物一致性','有自己的内容调性（搞笑/悬疑/温情/讽刺能选择一个并做好）','与S档关键差异：<strong>A是"看得下去+有惊喜"，S是"想推荐给别人+值得分析"——A让人说"这个短剧不错"，S让人说"这是短视频里的好电影"</strong>']}
+{t:'表现',items:['搞笑类反转/包袱设计不俗套——至少有一个"没想到"的点/悬疑类有基本逻辑闭合','温情类情感有铺垫不生硬/讽刺类角度有新意不陈词滥调','表演不尴尬——至少主角的表情/语气/节奏可信（不出戏）','<strong>二创/同人类</strong>：对原作角色有个人化诠释（不是复读台词），通过语音/画面/剪辑重构了情感体验——即使非真人出镜，若角色代入感强+情绪设计精准也可达标','剪辑节奏得当——该快的快该慢的慢不注水','古风/年代剧服化道有基本诚意/系列有基本的人物一致性','有自己的内容调性（搞笑/悬疑/温情/讽刺能选择一个并做好）','与S档关键差异：<strong>A是"看得下去+有惊喜"，S是"想推荐给别人+值得分析"——A让人说"这个短剧不错"，S让人说"这是短视频里的好电影"</strong>']}
 ],cases:['drama_a1','drama_a2']},
 {g:'b',label:'B档 · 中性',groups:[
 {t:'达标条件（全部满足）',items:['有完整剧情（开头→冲突→结局）/画面声音达标/有基本表演','剧情逻辑基本说得通/不靠字幕解释画面应该表达的内容']},
-{t:'典型不足',items:['套路化反转（身份互换/扮猪吃虎/霸总灰姑娘）/表演用力过猛','制作粗糙（单机位/无打光/环境音嘈杂）/古风剧只有服装无时代感']}
+{t:'典型不足（有以下特征即为B而非A）',items:['叙事套路化——反转可预测（身份互换/扮猪吃虎/霸总模板），换个角色名也能讲同一个故事','表演用力过猛或无层次感——情绪只有"0和100"没有过渡','制作无设计意图（单机位/无打光/环境音嘈杂）——<strong>注意：制作简单但叙事精巧的不应因此降为B</strong>','二创/混剪仅为素材拼接+BGM，无个人化编排或情感再设计']}
 ]},
 {g:'c',label:'C档 · 普通及以下',groups:[
 {t:'一票否决（命中任一即C）',items:['剧情逻辑混乱（前后矛盾/强行反转无因果）/表演极度尴尬','搬运他人短剧/纯文字卡点+AI配音/低俗擦边剧情','价值观导向负面（美化PUA/家暴/霸凌）/制造性别/地域/职业对立博流量']}
 ]}
 ]},
-
 {id:'sannong',name:'三农',over:'SANNONG',title:'三农',logic:'在拍 <em>→</em> 有真实感 <em>→</em> 有表达 <em>→</em> 有灵魂',
 grades:[
 {g:'s',label:'S档 · 优质',groups:[
@@ -871,30 +830,5 @@ buildSidebar();
 render();
 observeFadeIns();
 </script>
-</div>
-<script>
-const PW_HASH="7324b589826a3c24de1b783b22a6bfd6eb97264e220f412174d013c42497fb75";
-async function checkPw(){
-const inp=document.getElementById("pw-input");
-const v=inp.value;
-const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));
-const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-if(hash===PW_HASH){
-document.getElementById("pw-gate").classList.add("hidden");
-document.getElementById("main-content").classList.add("unlocked");
-localStorage.setItem("pw_ok","1");
-setTimeout(()=>document.getElementById("pw-gate").remove(),600);
-}else{
-inp.classList.add("shake");
-document.getElementById("pw-err").textContent="密码错误，请重试";
-setTimeout(()=>inp.classList.remove("shake"),400);
-}
-}
-if(localStorage.getItem("pw_ok")==="1"){
-document.getElementById("pw-gate").classList.add("hidden");
-document.getElementById("main-content").classList.add("unlocked");
-setTimeout(()=>document.getElementById("pw-gate").remove(),100);
-}
-</script>
-</body>
+</div><script>const PW_HASH="7324b589826a3c24de1b783b22a6bfd6eb97264e220f412174d013c42497fb75";async function checkPw(){const inp=document.getElementById("pw-input");const v=inp.value;const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");if(hash===PW_HASH){document.getElementById("pw-gate").classList.add("hidden");document.getElementById("main-content").classList.add("unlocked");localStorage.setItem("pw_ok","1");setTimeout(()=>document.getElementById("pw-gate").remove(),600);}else{inp.classList.add("shake");document.getElementById("pw-err").textContent="密码错误，请重试";setTimeout(()=>inp.classList.remove("shake"),400);}}if(localStorage.getItem("pw_ok")==="1"){document.getElementById("pw-gate").classList.add("hidden");document.getElementById("main-content").classList.add("unlocked");setTimeout(()=>document.getElementById("pw-gate").remove(),100);}</script></body>
 </html>
