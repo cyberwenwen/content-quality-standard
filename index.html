@@ -247,6 +247,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);line-height:1.7
 }
 .case-video .play-btn svg{width:40px;height:40px;fill:rgba(255,255,255,.85)}
 .case-video.playing .play-btn{opacity:0}
+.case-video .v-loading{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.case-video .v-loading::after{
+  content:'';width:28px;height:28px;border:3px solid rgba(255,255,255,.2);
+  border-top-color:rgba(255,255,255,.9);border-radius:50%;
+  animation:vSpin .8s linear infinite;
+}
+.case-video.is-loading .v-loading{opacity:1}
+@keyframes vSpin{to{transform:rotate(360deg)}}
 
 .case-info{padding:14px 16px}
 .case-author{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -2185,7 +2196,7 @@ function render(){
             const catKey=c.file.split('_')[0];
             const hasV=HAS_VIDEO.has(catKey);
             const mediaHtml=hasV?
-              '<div class="case-video'+(c.landscape?' land':'')+'" onclick="tv(this,event)"><video src="videos/'+c.file+'.mp4" poster="videos/'+c.file+'_thumb.jpg" preload="metadata" playsinline></video><div class="play-btn"><svg viewBox="0 0 64 64"><path d="M24 16l24 16-24 16z"/></svg></div></div>':
+              '<div class="case-video'+(c.landscape?' land':'')+'" onclick="tv(this,event)" data-vsrc="videos/'+c.file+'.mp4" data-vposter="videos/'+c.file+'_thumb.jpg"><video poster="videos/'+c.file+'_thumb.jpg" preload="none" playsinline></video><div class="play-btn"><svg viewBox="0 0 64 64"><path d="M24 16l24 16-24 16z"/></svg></div><div class="v-loading"></div></div>':
               '<div class="case-video'+(c.landscape?' land':'')+'"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--s2);color:var(--t3);font-size:12px">\u89C6\u9891\u5F85\u8865\u5145</div></div>';
             const gl=c.grade==='s'?'S\u00b7\u4F18\u8D28':'A\u00b7\u9AD8\u6F5C';
             bd+='<div class="case-card">'+mediaHtml+'<div class="case-info"><div class="case-author"><div class="case-avatar"><img src="'+c.avatar+'" onerror="this.parentElement.innerHTML=\'<div style=padding:4px;text-align:center;font-size:11px>'+c.author[0]+'</div>\'"/></div><span class="case-name">'+c.author+'</span><span class="case-grade-tag '+c.grade+'">'+gl+'</span></div><div class="case-desc">'+c.desc+'</div><div class="case-stats">'+c.stats+'</div></div></div>';
@@ -2244,9 +2255,18 @@ function closeSidebar(){
 
 function tv(w,e){
   e.stopPropagation();const v=w.querySelector('video');if(!v)return;
+  // Lazy load on first click
+  if(!v.src&&w.dataset.vsrc){
+    w.classList.add('is-loading');
+    v.src=w.dataset.vsrc;
+    v.load();
+    v.onloadeddata=()=>{w.classList.remove('is-loading');};
+    v.onerror=()=>{w.classList.remove('is-loading');};
+  }
   if(v.paused){
     document.querySelectorAll('.case-video video').forEach(x=>{if(x!==v){x.pause();x.parentElement.classList.remove('playing')}});
-    v.play();w.classList.add('playing');
+    const playPromise=v.play();
+    if(playPromise!==undefined)playPromise.then(()=>w.classList.add('playing')).catch(()=>{});
   }else{v.pause();w.classList.remove('playing');}
 }
 
@@ -2260,10 +2280,31 @@ function observeFadeIns(){
   els.forEach(el=>obs.observe(el));
 }
 
+// Lazy video preload observer — start loading metadata when video is about to enter viewport
+function observeVideoPreload(){
+  if(!('IntersectionObserver' in window))return;
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        const w=en.target;
+        const v=w.querySelector('video');
+        if(v&&!v.src&&w.dataset.vsrc){
+          v.preload='metadata';
+          v.src=w.dataset.vsrc;
+          v.load();
+        }
+        obs.unobserve(w);
+      }
+    });
+  },{rootMargin:'200px 0px'});
+  document.querySelectorAll('.case-video[data-vsrc]').forEach(el=>obs.observe(el));
+}
+
 // Init
 buildSidebar();
 render();
 observeFadeIns();
+observeVideoPreload();
 </script>
 </body>
 </html>
