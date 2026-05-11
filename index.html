@@ -2260,13 +2260,19 @@ function tv(w,e){
     w.classList.add('is-loading');
     v.src=w.dataset.vsrc;
     v.load();
-    v.onloadeddata=()=>{w.classList.remove('is-loading');};
+    // Wait for enough data to play, then autoplay
+    const onReady=()=>{
+      w.classList.remove('is-loading');
+      v.play().then(()=>w.classList.add('playing')).catch(()=>{});
+      v.removeEventListener('canplay',onReady);
+    };
+    v.addEventListener('canplay',onReady);
     v.onerror=()=>{w.classList.remove('is-loading');};
+    return;
   }
   if(v.paused){
     document.querySelectorAll('.case-video video').forEach(x=>{if(x!==v){x.pause();x.parentElement.classList.remove('playing')}});
-    const playPromise=v.play();
-    if(playPromise!==undefined)playPromise.then(()=>w.classList.add('playing')).catch(()=>{});
+    v.play().then(()=>w.classList.add('playing')).catch(()=>{});
   }else{v.pause();w.classList.remove('playing');}
 }
 
